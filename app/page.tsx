@@ -49,6 +49,7 @@ const ALL_GAMES = [
   { id: "face-maker", title: "Face Maker", emoji: "😊", category: "Creative", color: "#FFAB91", ageRange: "3+", description: "Build funny faces!" },
 
   // Educational
+  { id: "pokemon-kana-speller", title: "Pokémon Kana Speller", emoji: "⚡", category: "Educational", color: "#FFCB05", ageRange: "6+", description: "Learn Japanese by spelling Pokémon names!" },
   { id: "number-bubbles", title: "Number Bubbles", emoji: "🔢", category: "Educational", color: "#2196F3", ageRange: "3+", description: "Pop numbers in order!" },
   { id: "piano-keys", title: "Piano Keys", emoji: "🎹", category: "Educational", color: "#3F51B5", ageRange: "4+", description: "Play songs on the piano!" },
   { id: "constellation-connect", title: "Constellation Connect", emoji: "⭐", category: "Educational", color: "#1A237E", ageRange: "5+", description: "Connect stars to form constellations!" },
