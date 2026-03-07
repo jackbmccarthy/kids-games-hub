@@ -16,6 +16,66 @@ interface Pokemon {
 
 const TOTAL_POKEMON = 1025;
 
+// Kana to Romaji lookup for displaying on tiles
+const KANA_TO_ROMAJI: Record<string, string> = {
+  // Basic vowels
+  'ア': 'a', 'イ': 'i', 'ウ': 'u', 'エ': 'e', 'オ': 'o',
+  // K-row
+  'カ': 'ka', 'キ': 'ki', 'ク': 'ku', 'ケ': 'ke', 'コ': 'ko',
+  // S-row
+  'サ': 'sa', 'シ': 'shi', 'ス': 'su', 'セ': 'se', 'ソ': 'so',
+  // T-row
+  'タ': 'ta', 'チ': 'chi', 'ツ': 'tsu', 'テ': 'te', 'ト': 'to',
+  // N-row
+  'ナ': 'na', 'ニ': 'ni', 'ヌ': 'nu', 'ネ': 'ne', 'ノ': 'no',
+  // H-row
+  'ハ': 'ha', 'ヒ': 'hi', 'フ': 'fu', 'ヘ': 'he', 'ホ': 'ho',
+  // M-row
+  'マ': 'ma', 'ミ': 'mi', 'ム': 'mu', 'メ': 'me', 'モ': 'mo',
+  // Y-row
+  'ヤ': 'ya', 'ユ': 'yu', 'ヨ': 'yo',
+  // R-row
+  'ラ': 'ra', 'リ': 'ri', 'ル': 'ru', 'レ': 're', 'ロ': 'ro',
+  // W-row
+  'ワ': 'wa', 'ヲ': 'wo', 'ン': 'n',
+  // G-row (dakuten)
+  'ガ': 'ga', 'ギ': 'gi', 'グ': 'gu', 'ゲ': 'ge', 'ゴ': 'go',
+  // Z-row
+  'ザ': 'za', 'ジ': 'ji', 'ズ': 'zu', 'ゼ': 'ze', 'ゾ': 'zo',
+  // D-row
+  'ダ': 'da', 'ヂ': 'ji', 'ヅ': 'zu', 'デ': 'de', 'ド': 'do',
+  // B-row
+  'バ': 'ba', 'ビ': 'bi', 'ブ': 'bu', 'ベ': 'be', 'ボ': 'bo',
+  // P-row
+  'パ': 'pa', 'ピ': 'pi', 'プ': 'pu', 'ペ': 'pe', 'ポ': 'po',
+  // V
+  'ヴ': 'vu',
+  // Small characters
+  'ァ': 'a', 'ィ': 'i', 'ゥ': 'u', 'ェ': 'e', 'ォ': 'o',
+  'ャ': 'ya', 'ュ': 'yu', 'ョ': 'yo',
+  'ッ': 'tsu',
+  // Long vowel
+  'ー': 'ー',
+  // Combinations (youon)
+  'キャ': 'kya', 'キュ': 'kyu', 'キョ': 'kyo',
+  'シャ': 'sha', 'シュ': 'shu', 'ショ': 'sho',
+  'チャ': 'cha', 'チュ': 'chu', 'チョ': 'cho',
+  'ニャ': 'nya', 'ニュ': 'nyu', 'ニョ': 'nyo',
+  'ヒャ': 'hya', 'ヒュ': 'hyu', 'ヒョ': 'hyo',
+  'ミャ': 'mya', 'ミュ': 'myu', 'ミョ': 'myo',
+  'リャ': 'rya', 'リュ': 'ryu', 'リョ': 'ryo',
+  'ギャ': 'gya', 'ギュ': 'gyu', 'ギョ': 'gyo',
+  'ジャ': 'ja', 'ジュ': 'ju', 'ジョ': 'jo',
+  'ビャ': 'bya', 'ビュ': 'byu', 'ビョ': 'byo',
+  'ピャ': 'pya', 'ピュ': 'pyu', 'ピョ': 'pyo',
+  // Special combinations
+  'ヴァ': 'va', 'ヴィ': 'vi', 'ヴェ': 've', 'ヴォ': 'vo',
+  'ウィ': 'wi', 'ウェ': 'we', 'ウォ': 'wo',
+  'ティ': 'ti', 'ディ': 'di', 'トゥ': 'tu',
+  'フィ': 'fi', 'フェ': 'fe', 'フォ': 'fo',
+  'シェ': 'she', 'ジェ': 'je', 'チェ': 'che',
+};
+
 // Generation ranges
 const GENERATIONS = [
   { num: 0, name: "All Pokémon", range: "", start: 1, end: 1025 },
@@ -30,12 +90,17 @@ const GENERATIONS = [
   { num: 9, name: "Gen 9 (Paldea)", range: "906-1025", start: 906, end: 1025 },
 ];
 
+// Get romaji for a kana character
+function getRomaji(kana: string): string {
+  return KANA_TO_ROMAJI[kana] || kana;
+}
+
 export default function PokemonKanaSpellerPage() {
   const [phase, setPhase] = useState<GamePhase>("loading");
   const [allPokemon, setAllPokemon] = useState<Pokemon[]>([]);
   const [currentPokemon, setCurrentPokemon] = useState<Pokemon | null>(null);
   const [filledSlots, setFilledSlots] = useState<(string | null)[]>([]);
-  const [availableKana, setAvailableKana] = useState<string[]>([]);
+  const [availableKana, setAvailableKana] = useState<{kana: string, romaji: string}[]>([]);
   const [draggedKana, setDraggedKana] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -46,7 +111,6 @@ export default function PokemonKanaSpellerPage() {
 
   // Load saved data
   useEffect(() => {
-    // Load Pokemon data from local file
     fetch('/pokemon/data.json')
       .then(res => res.json())
       .then(data => {
@@ -89,14 +153,14 @@ export default function PokemonKanaSpellerPage() {
   }, [completed]);
 
   const shuffleKana = useCallback((kana: string[]) => {
-    const shuffled = [...kana];
-    // Add distractors from the current pokemon's kana pool
-    const allKanaChars = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポヴャュョッー";
+    const shuffled = kana.map(k => ({ kana: k, romaji: getRomaji(k) }));
+    // Add distractors
+    const allKanaChars = Object.keys(KANA_TO_ROMAJI).filter(k => k.length === 1);
     const numDistractors = Math.min(4, Math.max(2, kana.length));
     for (let i = 0; i < numDistractors; i++) {
       const distractor = allKanaChars[Math.floor(Math.random() * allKanaChars.length)];
-      if (!shuffled.includes(distractor)) {
-        shuffled.push(distractor);
+      if (!shuffled.find(s => s.kana === distractor)) {
+        shuffled.push({ kana: distractor, romaji: getRomaji(distractor) });
       }
     }
     // Shuffle
@@ -126,10 +190,8 @@ export default function PokemonKanaSpellerPage() {
     const activeGen = gen ?? generation;
     const genData = GENERATIONS.find(g => g.num === activeGen) || GENERATIONS[0];
     
-    // Filter by generation
     const pool = allPokemon.filter(p => p.id >= genData.start && p.id <= genData.end);
     
-    // Filter out completed, or use all if all completed
     const available = pool.filter(p => !completed.has(p.id));
     const pokemon = available.length > 0 
       ? available[Math.floor(Math.random() * available.length)]
@@ -153,7 +215,7 @@ export default function PokemonKanaSpellerPage() {
       setFilledSlots(newFilled);
       
       setAvailableKana(prev => {
-        const idx = prev.indexOf(kana);
+        const idx = prev.findIndex(k => k.kana === kana);
         if (idx > -1) {
           const newAvailable = [...prev];
           newAvailable.splice(idx, 1);
@@ -177,7 +239,6 @@ export default function PokemonKanaSpellerPage() {
         }, 400);
       }
     } else {
-      // Wrong - lose streak
       setStreak(0);
     }
   }, [currentPokemon, filledSlots, speakJapanese, streak]);
@@ -216,13 +277,11 @@ export default function PokemonKanaSpellerPage() {
 
       {phase === "menu" && (
         <div className="max-w-2xl mx-auto">
-          {/* Ready indicator */}
           <div className="bg-green-100 rounded-2xl p-3 shadow mb-4 text-center">
             <p className="font-bold text-green-700">✅ All {TOTAL_POKEMON} Pokémon loaded locally!</p>
             <p className="text-xs text-green-600">Works offline • No API calls needed</p>
           </div>
 
-          {/* Generation selector */}
           <div className="bg-white rounded-2xl p-6 shadow-xl">
             <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Choose a Generation</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -238,7 +297,6 @@ export default function PokemonKanaSpellerPage() {
               ))}
             </div>
             
-            {/* Progress per generation */}
             <div className="mt-4 p-3 bg-gray-100 rounded-xl">
               <p className="font-bold text-gray-700 mb-2">Your Progress:</p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-1 text-xs">
@@ -257,10 +315,10 @@ export default function PokemonKanaSpellerPage() {
 
             <div className="mt-4 p-3 bg-gray-100 rounded-xl text-sm text-gray-600">
               <p className="font-bold mb-1">How to Play:</p>
-              <p>1. A Pokémon appears with empty kana slots</p>
-              <p>2. Drag/click the correct Japanese characters</p>
-              <p>3. Each correct placement speaks the sound!</p>
-              <p>4. Complete the word to hear the full name!</p>
+              <p>1. Match the kana tiles to the slot shapes</p>
+              <p>2. Each tile shows the romaji pronunciation</p>
+              <p>3. Tap correct tiles to fill the word!</p>
+              <p>4. Complete the word to hear it spoken!</p>
             </div>
           </div>
         </div>
@@ -284,40 +342,51 @@ export default function PokemonKanaSpellerPage() {
               </div>
             </div>
 
-            {/* Kana Slots */}
-            <div className="mt-4">
-              <div className="flex justify-center gap-1 md:gap-2 flex-wrap mb-2">
-                {filledSlots.map((filled, index) => (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      if (filled === null && draggedKana) {
-                        handlePlace(index, draggedKana);
-                      }
-                    }}
-                    className={`w-12 h-14 md:w-14 md:h-16 rounded-lg border-3 flex items-center justify-center text-xl md:text-2xl font-bold transition-all cursor-pointer
-                      ${filled
-                        ? "bg-green-100 border-green-400 text-green-700"
-                        : "bg-gray-100 border-2 border-dashed border-gray-300 hover:border-yellow-400"
-                      }`}
-                  >
-                    {filled || "?"}
-                  </div>
-                ))}
-              </div>
-              
-              {/* Romaji hints */}
-              <div className="flex justify-center gap-1 md:gap-2 flex-wrap">
-                {currentPokemon.romajiParts.map((r, index) => (
-                  <div
-                    key={index}
-                    className={`w-12 md:w-14 text-center text-xs md:text-sm font-semibold
-                      ${filledSlots[index] ? "text-green-600" : "text-gray-400"}
-                    `}
-                  >
-                    {showHint ? r : ""}
-                  </div>
-                ))}
+            {/* Kana Slots - show target kana shape as outline */}
+            <div className="mt-6">
+              <div className="flex justify-center gap-2 md:gap-3 flex-wrap">
+                {filledSlots.map((filled, index) => {
+                  const targetKana = currentPokemon.kana[index];
+                  const targetRomaji = getRomaji(targetKana);
+                  
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        if (filled === null && draggedKana) {
+                          handlePlace(index, draggedKana);
+                        }
+                      }}
+                      className={`relative flex flex-col items-center transition-all cursor-pointer
+                        ${filled ? "scale-105" : "hover:scale-105"}`}
+                    >
+                      {/* Slot with kana shape */}
+                      <div
+                        className={`w-16 h-20 md:w-20 md:h-24 rounded-xl border-4 flex flex-col items-center justify-center
+                          transition-all
+                          ${filled
+                            ? "bg-green-100 border-green-500 shadow-lg"
+                            : "bg-gray-50 border-dashed border-gray-300 hover:border-yellow-400"
+                          }`}
+                      >
+                        {filled ? (
+                          // Filled - show the placed kana
+                          <span className="text-3xl md:text-4xl font-bold text-green-700">{filled}</span>
+                        ) : (
+                          // Empty - show faint kana outline as guide
+                          <span className="text-3xl md:text-4xl font-bold text-gray-200 select-none">
+                            {targetKana}
+                          </span>
+                        )}
+                      </div>
+                      {/* Romaji hint below slot */}
+                      <span className={`text-xs md:text-sm font-semibold mt-1
+                        ${filled ? "text-green-600" : "text-gray-400"}`}>
+                        {targetRomaji}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -327,7 +396,7 @@ export default function PokemonKanaSpellerPage() {
                 onClick={() => setShowHint(!showHint)}
                 className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm font-bold"
               >
-                {showHint ? "🙈 Hide" : "💡 Hints"}
+                {showHint ? "🙈 Hide" : "💡 Tips"}
               </button>
               <button
                 onClick={() => speakJapanese(currentPokemon.japanese)}
@@ -338,30 +407,30 @@ export default function PokemonKanaSpellerPage() {
             </div>
           </div>
 
-          {/* Available Kana */}
+          {/* Available Kana Tiles - with romaji underneath */}
           <div className="bg-white/90 rounded-2xl p-4 shadow-lg">
-            <div className="flex justify-center gap-2 flex-wrap">
-              {availableKana.map((kana, index) => (
+            <p className="text-center text-sm text-gray-600 font-semibold mb-3">
+              Tap the matching kana:
+            </p>
+            <div className="flex justify-center gap-2 md:gap-3 flex-wrap">
+              {availableKana.map((item, index) => (
                 <button
-                  key={`${kana}-${index}`}
-                  draggable
-                  onDragStart={() => setDraggedKana(kana)}
-                  onDragEnd={() => setDraggedKana(null)}
+                  key={`${item.kana}-${index}`}
                   onClick={() => {
-                    // Auto-place in first correct empty slot
+                    // Find first matching empty slot
                     for (let i = 0; i < currentPokemon.kana.length; i++) {
-                      if (filledSlots[i] === null && kana === currentPokemon.kana[i]) {
-                        handlePlace(i, kana);
+                      if (filledSlots[i] === null && item.kana === currentPokemon.kana[i]) {
+                        handlePlace(i, item.kana);
                         break;
                       }
                     }
                   }}
-                  className={`w-12 h-14 md:w-14 md:h-16 bg-gradient-to-br from-blue-400 to-purple-500 
-                    text-white rounded-lg flex items-center justify-center text-xl md:text-2xl font-bold 
-                    shadow cursor-grab active:cursor-grabbing hover:scale-110 transition-transform
-                    ${draggedKana === kana ? "opacity-50" : ""}`}
+                  className="flex flex-col items-center bg-gradient-to-br from-blue-500 to-purple-600 
+                    text-white rounded-xl shadow-lg hover:scale-110 transition-transform
+                    active:scale-95 w-14 h-16 md:w-16 md:h-20"
                 >
-                  {kana}
+                  <span className="text-2xl md:text-3xl font-bold mt-1">{item.kana}</span>
+                  <span className="text-[10px] md:text-xs font-semibold opacity-80">{item.romaji}</span>
                 </button>
               ))}
             </div>
