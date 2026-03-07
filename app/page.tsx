@@ -5,257 +5,252 @@ import Link from "next/link";
 
 const ALL_GAMES = [
   // Puzzle
-  { id: "word-search", title: "Word Search", emoji: "🔤", category: "Puzzle", color: "#FF6B6B", ageRange: "5+", description: "Find hidden words in a colorful grid!" },
-  { id: "word-snake", title: "Word Snake", emoji: "🐍", category: "Puzzle", color: "#4CAF50", ageRange: "5+", description: "Connect letters to form words!" },
-  { id: "shadow-match", title: "Shadow Match", emoji: "👤", category: "Puzzle", color: "#9B59B6", ageRange: "3+", description: "Match objects to their shadows!" },
-  { id: "memory-mural", title: "Memory Mural", emoji: "🖼️", category: "Puzzle", color: "#3F51B5", ageRange: "4+", description: "Find matching picture pairs!" },
-  { id: "emoji-match", title: "Emoji Match", emoji: "🎴", category: "Puzzle", color: "#E91E63", ageRange: "4+", description: "Match emoji pairs!" },
-  { id: "connect-the-dots", title: "Connect the Dots", emoji: "🔢", category: "Puzzle", color: "#FF9800", ageRange: "3+", description: "Connect numbers to reveal pictures!" },
-  { id: "pattern-repeat", title: "Pattern Repeat", emoji: "🎵", category: "Puzzle", color: "#9C27B0", ageRange: "4+", description: "Watch and repeat the pattern!" },
-  { id: "maze-runner", title: "Maze Runner", emoji: "🏃", category: "Puzzle", color: "#607D8B", ageRange: "5+", description: "Navigate through mazes!" },
-  { id: "jigsaw-jam", title: "Jigsaw Jam", emoji: "🧩", category: "Puzzle", color: "#795548", ageRange: "4+", description: "Drag puzzle pieces to complete pictures!" },
-  { id: "spot-the-difference", title: "Spot the Difference", emoji: "👀", category: "Puzzle", color: "#00BCD4", ageRange: "4+", description: "Find what's different!" },
-  { id: "star-catcher", title: "Star Catcher", emoji: "⭐", category: "Puzzle", color: "#FFC107", ageRange: "4+", description: "Connect stars to form shapes!" },
-  { id: "puzzle-slider", title: "Puzzle Slider", emoji: "🧊", category: "Puzzle", color: "#00ACC1", ageRange: "5+", description: "Slide tiles to solve the puzzle!" },
-  { id: "slide-puzzle", title: "Slide Puzzle", emoji: "🔄", category: "Puzzle", color: "#26A69A", ageRange: "5+", description: "Classic sliding puzzle game!" },
-  { id: "domino-chain", title: "Domino Chain", emoji: "🁃", category: "Puzzle", color: "#5D4037", ageRange: "4+", description: "Match and chain dominoes!" },
+  { id: "word-search", title: "Word Search", emoji: "🔤", category: "Puzzle", age: "5+", desc: "Find hidden words!" },
+  { id: "word-snake", title: "Word Snake", emoji: "🐍", category: "Puzzle", age: "5+", desc: "Connect letters!" },
+  { id: "shadow-match", title: "Shadow Match", emoji: "👤", category: "Puzzle", age: "3+", desc: "Match shadows!" },
+  { id: "memory-mural", title: "Memory Mural", emoji: "🖼️", category: "Puzzle", age: "4+", desc: "Find matching pairs!" },
+  { id: "emoji-match", title: "Emoji Match", emoji: "🎴", category: "Puzzle", age: "4+", desc: "Match emoji!" },
+  { id: "connect-the-dots", title: "Connect Dots", emoji: "🔢", category: "Puzzle", age: "3+", desc: "Connect numbers!" },
+  { id: "pattern-repeat", title: "Pattern Repeat", emoji: "🎵", category: "Puzzle", age: "4+", desc: "Repeat patterns!" },
+  { id: "maze-runner", title: "Maze Runner", emoji: "🏃", category: "Puzzle", age: "5+", desc: "Solve mazes!" },
+  { id: "jigsaw-jam", title: "Jigsaw Jam", emoji: "🧩", category: "Puzzle", age: "4+", desc: "Puzzle pieces!" },
+  { id: "spot-the-difference", title: "Spot Difference", emoji: "👀", category: "Puzzle", age: "4+", desc: "Find differences!" },
+  { id: "star-catcher", title: "Star Catcher", emoji: "⭐", category: "Puzzle", age: "4+", desc: "Connect stars!" },
+  { id: "puzzle-slider", title: "Puzzle Slider", emoji: "🧊", category: "Puzzle", age: "5+", desc: "Slide tiles!" },
+  { id: "slide-puzzle", title: "Slide Puzzle", emoji: "🔄", category: "Puzzle", age: "5+", desc: "Classic slider!" },
+  { id: "domino-chain", title: "Domino Chain", emoji: "🁃", category: "Puzzle", age: "4+", desc: "Chain dominoes!" },
 
   // Arcade
-  { id: "bubble-pop-chain", title: "Bubble Pop Chain", emoji: "🫧", category: "Arcade", color: "#4ECDC4", ageRange: "4+", description: "Pop bubbles and create chain reactions!" },
-  { id: "dino-jump", title: "Dino Jump", emoji: "🦖", category: "Arcade", color: "#4CAF50", ageRange: "4+", description: "Jump over obstacles!" },
-  { id: "whack-a-mole", title: "Whack-a-Mole", emoji: "🔨", category: "Arcade", color: "#8D6E63", ageRange: "3+", description: "Tap the moles before they hide!" },
-  { id: "catch-the-rain", title: "Catch the Rain", emoji: "🌧️", category: "Arcade", color: "#42A5F5", ageRange: "4+", description: "Catch raindrops in your bucket!" },
-  { id: "fishing-frenzy", title: "Fishing Frenzy", emoji: "🎣", category: "Arcade", color: "#1976D2", ageRange: "4+", description: "Catch fish with your hook!" },
-  { id: "shape-sorter", title: "Shape Sorter", emoji: "🔷", category: "Arcade", color: "#9C27B0", ageRange: "3+", description: "Drag shapes to matching holes!" },
-  { id: "balloon-pop", title: "Balloon Pop", emoji: "🎈", category: "Arcade", color: "#F44336", ageRange: "3+", description: "Pop balloons for points!" },
-  { id: "fruit-slice", title: "Fruit Slice", emoji: "🍉", category: "Arcade", color: "#FF5722", ageRange: "4+", description: "Swipe to slice falling fruit!" },
-  { id: "drop-stack", title: "Drop Stack", emoji: "📦", category: "Arcade", color: "#673AB7", ageRange: "5+", description: "Stack blocks perfectly!" },
-  { id: "balloon-keepy-up", title: "Balloon Keepy-Up", emoji: "🎈", category: "Arcade", color: "#E91E63", ageRange: "4+", description: "Keep balloons in the air!" },
-  { id: "reaction-time", title: "Reaction Time", emoji: "⚡", category: "Arcade", color: "#FFEB3B", ageRange: "5+", description: "Test your reaction speed!" },
-  { id: "build-a-tower", title: "Build a Tower", emoji: "🏗️", category: "Arcade", color: "#795548", ageRange: "5+", description: "Stack blocks to build tall towers!" },
-  { id: "potato-sack-race", title: "Potato Sack Race", emoji: "🏃", category: "Arcade", color: "#8BC34A", ageRange: "4+", description: "Race to the finish!" },
-  { id: "lava-jump", title: "Lava Jump", emoji: "🌋", category: "Arcade", color: "#FF5722", ageRange: "5+", description: "Jump over the lava!" },
-  { id: "button-mash", title: "Button Mash", emoji: "🔴", category: "Arcade", color: "#F44336", ageRange: "4+", description: "Tap as fast as you can!" },
-  { id: "cup-stack", title: "Cup Stack", emoji: "🥤", category: "Arcade", color: "#2196F3", ageRange: "4+", description: "Stack cups quickly!" },
-  { id: "coin-collector", title: "Coin Collector", emoji: "🪙", category: "Arcade", color: "#FFC107", ageRange: "4+", description: "Collect falling coins!" },
+  { id: "bubble-pop-chain", title: "Bubble Pop", emoji: "🫧", category: "Arcade", age: "4+", desc: "Pop bubbles!" },
+  { id: "dino-jump", title: "Dino Jump", emoji: "🦖", category: "Arcade", age: "4+", desc: "Jump obstacles!" },
+  { id: "whack-a-mole", title: "Whack-a-Mole", emoji: "🔨", category: "Arcade", age: "3+", desc: "Tap the moles!" },
+  { id: "catch-the-rain", title: "Catch Rain", emoji: "🌧️", category: "Arcade", age: "4+", desc: "Catch raindrops!" },
+  { id: "fishing-frenzy", title: "Fishing Frenzy", emoji: "🎣", category: "Arcade", age: "4+", desc: "Catch fish!" },
+  { id: "shape-sorter", title: "Shape Sorter", emoji: "🔷", category: "Arcade", age: "3+", desc: "Sort shapes!" },
+  { id: "balloon-pop", title: "Balloon Pop", emoji: "🎈", category: "Arcade", age: "3+", desc: "Pop balloons!" },
+  { id: "fruit-slice", title: "Fruit Slice", emoji: "🍉", category: "Arcade", age: "4+", desc: "Slice fruit!" },
+  { id: "drop-stack", title: "Drop Stack", emoji: "📦", category: "Arcade", age: "5+", desc: "Stack blocks!" },
+  { id: "balloon-keepy-up", title: "Keepy Up", emoji: "🎈", category: "Arcade", age: "4+", desc: "Keep balloons up!" },
+  { id: "reaction-time", title: "Reaction Time", emoji: "⚡", category: "Arcade", age: "5+", desc: "Test speed!" },
+  { id: "build-a-tower", title: "Build Tower", emoji: "🏗️", category: "Arcade", age: "5+", desc: "Stack high!" },
+  { id: "potato-sack-race", title: "Sack Race", emoji: "🏃", category: "Arcade", age: "4+", desc: "Race to win!" },
+  { id: "lava-jump", title: "Lava Jump", emoji: "🌋", category: "Arcade", age: "5+", desc: "Jump over lava!" },
+  { id: "button-mash", title: "Button Mash", emoji: "🔴", category: "Arcade", age: "4+", desc: "Tap fast!" },
+  { id: "cup-stack", title: "Cup Stack", emoji: "🥤", category: "Arcade", age: "4+", desc: "Stack cups!" },
+  { id: "coin-collector", title: "Coin Collector", emoji: "🪙", category: "Arcade", age: "4+", desc: "Collect coins!" },
 
   // Creative
-  { id: "splat-paint", title: "Splat Paint", emoji: "🎨", category: "Creative", color: "#E91E63", ageRange: "3+", description: "Throw paint to create art!" },
-  { id: "mirror-draw", title: "Mirror Draw", emoji: "🪞", category: "Creative", color: "#9C27B0", ageRange: "4+", description: "Draw symmetrical art!" },
-  { id: "color-mix-lab", title: "Color Mix Lab", emoji: "🧪", category: "Creative", color: "#FF9800", ageRange: "4+", description: "Mix colors and learn color theory!" },
-  { id: "coloring-book", title: "Coloring Book", emoji: "📖", category: "Creative", color: "#4CAF50", ageRange: "3+", description: "Tap to color pictures!" },
-  { id: "sticker-scene", title: "Sticker Scene", emoji: "🌟", category: "Creative", color: "#FFD54F", ageRange: "3+", description: "Create scenes with stickers!" },
-  { id: "bubble-wand", title: "Bubble Wand", emoji: "🫧", category: "Creative", color: "#81D4FA", ageRange: "3+", description: "Wave to create bubble art!" },
-  { id: "face-maker", title: "Face Maker", emoji: "😊", category: "Creative", color: "#FFAB91", ageRange: "3+", description: "Build funny faces!" },
+  { id: "splat-paint", title: "Splat Paint", emoji: "🎨", category: "Creative", age: "3+", desc: "Paint splatter!" },
+  { id: "mirror-draw", title: "Mirror Draw", emoji: "🪞", category: "Creative", age: "4+", desc: "Symmetrical art!" },
+  { id: "color-mix-lab", title: "Color Mix", emoji: "🧪", category: "Creative", age: "4+", desc: "Mix colors!" },
+  { id: "coloring-book", title: "Coloring Book", emoji: "📖", category: "Creative", age: "3+", desc: "Color pictures!" },
+  { id: "sticker-scene", title: "Sticker Scene", emoji: "🌟", category: "Creative", age: "3+", desc: "Sticker art!" },
+  { id: "bubble-wand", title: "Bubble Wand", emoji: "🫧", category: "Creative", age: "3+", desc: "Bubble art!" },
+  { id: "face-maker", title: "Face Maker", emoji: "😊", category: "Creative", age: "3+", desc: "Make faces!" },
+  { id: "color-sort", title: "Color Sort", emoji: "🌈", category: "Creative", age: "3+", desc: "Sort colors!" },
 
   // Educational
-  { id: "pokemon-kana-speller", title: "Pokémon Kana Speller", emoji: "⚡", category: "Educational", color: "#FFCB05", ageRange: "6+", description: "Learn Japanese by spelling Pokémon names!" },
-  { id: "number-bubbles", title: "Number Bubbles", emoji: "🔢", category: "Educational", color: "#2196F3", ageRange: "3+", description: "Pop numbers in order!" },
-  { id: "piano-keys", title: "Piano Keys", emoji: "🎹", category: "Educational", color: "#3F51B5", ageRange: "4+", description: "Play songs on the piano!" },
-  { id: "constellation-connect", title: "Constellation Connect", emoji: "⭐", category: "Educational", color: "#1A237E", ageRange: "5+", description: "Connect stars to form constellations!" },
-  { id: "letter-pop", title: "Letter Pop", emoji: "🔤", category: "Educational", color: "#E91E63", ageRange: "4+", description: "Pop balloons to spell words!" },
-  { id: "pattern-builder", title: "Pattern Builder", emoji: "🔷", category: "Educational", color: "#00BCD4", ageRange: "4+", description: "Complete the patterns!" },
-  { id: "clock-learn", title: "Clock Learn", emoji: "🕐", category: "Educational", color: "#607D8B", ageRange: "5+", description: "Learn to tell time!" },
-  { id: "clock-time", title: "Clock Time", emoji: "⏰", category: "Educational", color: "#546E7A", ageRange: "5+", description: "Set the clock hands!" },
-  { id: "money-match", title: "Money Match", emoji: "💰", category: "Educational", color: "#4CAF50", ageRange: "5+", description: "Count coins to match prices!" },
-  { id: "food-groups", title: "Food Groups", emoji: "🥗", category: "Educational", color: "#8BC34A", ageRange: "4+", description: "Sort foods into categories!" },
-  { id: "animal-sounds", title: "Animal Sounds", emoji: "🐄", category: "Educational", color: "#795548", ageRange: "3+", description: "Match animals to their sounds!" },
-  { id: "rhyme-time", title: "Rhyme Time", emoji: "🎤", category: "Educational", color: "#9C27B0", ageRange: "4+", description: "Match rhyming words!" },
-  { id: "opposites", title: "Opposites", emoji: "↔️", category: "Educational", color: "#FF5722", ageRange: "4+", description: "Match opposite words!" },
-  { id: "alphabet-train", title: "Alphabet Train", emoji: "🚂", category: "Educational", color: "#F44336", ageRange: "4+", description: "Put letters in ABC order!" },
-  { id: "alphabet-trace", title: "Alphabet Trace", emoji: "✏️", category: "Educational", color: "#2196F3", ageRange: "3+", description: "Trace the alphabet!" },
-  { id: "counting-sheep", title: "Counting Sheep", emoji: "🐑", category: "Educational", color: "#90A4AE", ageRange: "3+", description: "Count sheep jumping over fence!" },
-  { id: "balloon-pop-math", title: "Balloon Pop Math", emoji: "🧮", category: "Educational", color: "#673AB7", ageRange: "5+", description: "Pop the correct answer!" },
-  { id: "dice-roll", title: "Dice Roll", emoji: "🎲", category: "Educational", color: "#FF7043", ageRange: "4+", description: "Learn to count with dice!" },
-  { id: "bead-pattern", title: "Bead Pattern", emoji: "📿", category: "Educational", color: "#EC407A", ageRange: "4+", description: "Complete bead patterns!" },
+  { id: "pokemon-kana-speller", title: "Pokémon Kana", emoji: "⚡", category: "Educational", age: "6+", desc: "Learn Japanese!" },
+  { id: "number-bubbles", title: "Number Bubbles", emoji: "🔢", category: "Educational", age: "3+", desc: "Pop numbers!" },
+  { id: "piano-keys", title: "Piano Keys", emoji: "🎹", category: "Educational", age: "4+", desc: "Play piano!" },
+  { id: "constellation-connect", title: "Constellations", emoji: "⭐", category: "Educational", age: "5+", desc: "Connect stars!" },
+  { id: "letter-pop", title: "Letter Pop", emoji: "🔤", category: "Educational", age: "4+", desc: "Pop letters!" },
+  { id: "pattern-builder", title: "Pattern Builder", emoji: "🔷", category: "Educational", age: "4+", desc: "Build patterns!" },
+  { id: "clock-learn", title: "Clock Learn", emoji: "🕐", category: "Educational", age: "5+", desc: "Tell time!" },
+  { id: "clock-time", title: "Clock Time", emoji: "⏰", category: "Educational", age: "5+", desc: "Set the clock!" },
+  { id: "money-match", title: "Money Match", emoji: "💰", category: "Educational", age: "5+", desc: "Count coins!" },
+  { id: "food-groups", title: "Food Groups", emoji: "🥗", category: "Educational", age: "4+", desc: "Sort foods!" },
+  { id: "animal-sounds", title: "Animal Sounds", emoji: "🐄", category: "Educational", age: "3+", desc: "Match sounds!" },
+  { id: "rhyme-time", title: "Rhyme Time", emoji: "🎤", category: "Educational", age: "4+", desc: "Match rhymes!" },
+  { id: "opposites", title: "Opposites", emoji: "↔️", category: "Educational", age: "4+", desc: "Match opposites!" },
+  { id: "alphabet-train", title: "ABC Train", emoji: "🚂", category: "Educational", age: "4+", desc: "Letter order!" },
+  { id: "alphabet-trace", title: "ABC Trace", emoji: "✏️", category: "Educational", age: "3+", desc: "Trace letters!" },
+  { id: "counting-sheep", title: "Count Sheep", emoji: "🐑", category: "Educational", age: "3+", desc: "Count sheep!" },
+  { id: "balloon-pop-math", title: "Balloon Math", emoji: "🧮", category: "Educational", age: "5+", desc: "Pop answers!" },
+  { id: "dice-roll", title: "Dice Roll", emoji: "🎲", category: "Educational", age: "4+", desc: "Roll dice!" },
+  { id: "bead-pattern", title: "Bead Pattern", emoji: "📿", category: "Educational", age: "4+", desc: "Bead patterns!" },
+  { id: "feed-the-monster", title: "Feed Monster", emoji: "👹", category: "Educational", age: "3+", desc: "Feed the monster!" },
 
   // Adventure
-  { id: "rocket-launch", title: "Rocket Launch", emoji: "🚀", category: "Adventure", color: "#1A237E", ageRange: "5+", description: "Guide rocket through space!" },
-  { id: "snowball-fight", title: "Snowball Fight", emoji: "❄️", category: "Adventure", color: "#81D4FA", ageRange: "4+", description: "Throw snowballs at targets!" },
-  { id: "train-tracks", title: "Train Tracks", emoji: "🚂", category: "Adventure", color: "#795548", ageRange: "4+", description: "Lay track to guide the train!" },
-  { id: "train-track", title: "Train Track", emoji: "🛤️", category: "Adventure", color: "#6D4C41", ageRange: "4+", description: "Build train tracks!" },
-  { id: "treasure-hunt", title: "Treasure Hunt", emoji: "🏴‍☠️", category: "Adventure", color: "#FFC107", ageRange: "4+", description: "Follow clues to find treasure!" },
-  { id: "cloud-jump", title: "Cloud Jump", emoji: "☁️", category: "Adventure", color: "#64B5F6", ageRange: "4+", description: "Jump between clouds!" },
-  { id: "treasure-map", title: "Treasure Map", emoji: "🗺️", category: "Adventure", color: "#A1887F", ageRange: "4+", description: "Find hidden treasure!" },
-  { id: "zoo-escape", title: "Zoo Escape", emoji: "🦁", category: "Adventure", color: "#FF9800", ageRange: "4+", description: "Help animals escape!" },
-  { id: "time-travel", title: "Time Travel", emoji: "⏳", category: "Adventure", color: "#7E57C2", ageRange: "5+", description: "Travel through time!" },
+  { id: "rocket-launch", title: "Rocket Launch", emoji: "🚀", category: "Adventure", age: "5+", desc: "Space adventure!" },
+  { id: "snowball-fight", title: "Snowball Fight", emoji: "❄️", category: "Adventure", age: "4+", desc: "Throw snowballs!" },
+  { id: "train-tracks", title: "Train Tracks", emoji: "🚂", category: "Adventure", age: "4+", desc: "Lay track!" },
+  { id: "train-track", title: "Train Track", emoji: "🛤️", category: "Adventure", age: "4+", desc: "Build tracks!" },
+  { id: "treasure-hunt", title: "Treasure Hunt", emoji: "🏴‍☠️", category: "Adventure", age: "4+", desc: "Find treasure!" },
+  { id: "cloud-jump", title: "Cloud Jump", emoji: "☁️", category: "Adventure", age: "4+", desc: "Jump clouds!" },
+  { id: "treasure-map", title: "Treasure Map", emoji: "🗺️", category: "Adventure", age: "4+", desc: "Follow map!" },
+  { id: "zoo-escape", title: "Zoo Escape", emoji: "🦁", category: "Adventure", age: "4+", desc: "Help animals!" },
+  { id: "time-travel", title: "Time Travel", emoji: "⏳", category: "Adventure", age: "5+", desc: "Travel time!" },
 
   // Nature
-  { id: "bug-garden", title: "Bug Garden", emoji: "🦋", category: "Nature", color: "#4CAF50", ageRange: "4+", description: "Catch bugs in the garden!" },
-  { id: "egg-catch", title: "Egg Catch", emoji: "🥚", category: "Nature", color: "#FFECB3", ageRange: "4+", description: "Catch eggs from chickens!" },
-  { id: "petal-catch", title: "Petal Catch", emoji: "🌸", category: "Nature", color: "#F48FB1", ageRange: "4+", description: "Catch falling flower petals!" },
-  { id: "garden-grow", title: "Garden Grow", emoji: "🌻", category: "Nature", color: "#66BB6A", ageRange: "4+", description: "Water and grow plants!" },
-  { id: "catch-fireflies", title: "Catch Fireflies", emoji: "✨", category: "Nature", color: "#FFF59D", ageRange: "4+", description: "Catch glowing fireflies!" },
-  { id: "zoo-keeper", title: "Zoo Keeper", emoji: "🦁", category: "Nature", color: "#8D6E63", ageRange: "4+", description: "Match animals to habitats!" },
-  { id: "flower-bloom", title: "Flower Bloom", emoji: "🌺", category: "Nature", color: "#F06292", ageRange: "4+", description: "Help flowers bloom!" },
-  { id: "plant-seeds", title: "Plant Seeds", emoji: "🌱", category: "Nature", color: "#81C784", ageRange: "4+", description: "Plant and grow seeds!" },
-  { id: "food-chain", title: "Food Chain", emoji: "🔗", category: "Nature", color: "#AED581", ageRange: "5+", description: "Learn about food chains!" },
+  { id: "bug-garden", title: "Bug Garden", emoji: "🦋", category: "Nature", age: "4+", desc: "Catch bugs!" },
+  { id: "egg-catch", title: "Egg Catch", emoji: "🥚", category: "Nature", age: "4+", desc: "Catch eggs!" },
+  { id: "petal-catch", title: "Petal Catch", emoji: "🌸", category: "Nature", age: "4+", desc: "Catch petals!" },
+  { id: "garden-grow", title: "Garden Grow", emoji: "🌻", category: "Nature", age: "4+", desc: "Grow plants!" },
+  { id: "catch-fireflies", title: "Fireflies", emoji: "✨", category: "Nature", age: "4+", desc: "Catch fireflies!" },
+  { id: "zoo-keeper", title: "Zoo Keeper", emoji: "🦁", category: "Nature", age: "4+", desc: "Match habitats!" },
+  { id: "flower-bloom", title: "Flower Bloom", emoji: "🌺", category: "Nature", age: "4+", desc: "Bloom flowers!" },
+  { id: "plant-seeds", title: "Plant Seeds", emoji: "🌱", category: "Nature", age: "4+", desc: "Plant seeds!" },
+  { id: "food-chain", title: "Food Chain", emoji: "🔗", category: "Nature", age: "5+", desc: "Food chains!" },
 
   // Physics
-  { id: "gravity-draw", title: "Gravity Draw", emoji: "⚽", category: "Physics", color: "#2196F3", ageRange: "5+", description: "Draw platforms to guide the ball!" },
-  { id: "rhythm-tiles", title: "Rhythm Tiles", emoji: "🎵", category: "Physics", color: "#E91E63", ageRange: "5+", description: "Tap tiles to the beat!" },
-  { id: "bounce-ball", title: "Bounce Ball", emoji: "🏀", category: "Physics", color: "#FF5722", ageRange: "4+", description: "Draw lines to keep ball bouncing!" },
-  { id: "pinball-wizard", title: "Pinball Wizard", emoji: "🎱", category: "Physics", color: "#9C27B0", ageRange: "5+", description: "Play pinball!" },
-  { id: "hopscotch", title: "Hopscotch", emoji: "🦶", category: "Physics", color: "#4CAF50", ageRange: "4+", description: "Jump through hopscotch!" },
-  { id: "juice-squeeze", title: "Juice Squeeze", emoji: "🧃", category: "Physics", color: "#FF9800", ageRange: "4+", description: "Squeeze juice from fruits!" },
+  { id: "gravity-draw", title: "Gravity Draw", emoji: "⚽", category: "Physics", age: "5+", desc: "Draw platforms!" },
+  { id: "rhythm-tiles", title: "Rhythm Tiles", emoji: "🎵", category: "Physics", age: "5+", desc: "Tap to beat!" },
+  { id: "bounce-ball", title: "Bounce Ball", emoji: "🏀", category: "Physics", age: "4+", desc: "Keep bouncing!" },
+  { id: "pinball-wizard", title: "Pinball", emoji: "🎱", category: "Physics", age: "5+", desc: "Play pinball!" },
+  { id: "hopscotch", title: "Hopscotch", emoji: "🦶", category: "Physics", age: "4+", desc: "Jump squares!" },
+  { id: "juice-squeeze", title: "Juice Squeeze", emoji: "🧃", category: "Physics", age: "4+", desc: "Squeeze juice!" },
 
   // Simulation
-  { id: "weather-dress", title: "Weather Dress", emoji: "🌤️", category: "Simulation", color: "#64B5F6", ageRange: "4+", description: "Dress for the weather!" },
-  { id: "music-maker", title: "Music Maker", emoji: "🎵", category: "Simulation", color: "#9C27B0", ageRange: "4+", description: "Create music with instruments!" },
-  { id: "traffic-light", title: "Traffic Light", emoji: "🚦", category: "Simulation", color: "#F44336", ageRange: "4+", description: "Stop and go with the lights!" },
-  { id: "pet-vet", title: "Pet Vet", emoji: "🐕", category: "Simulation", color: "#8BC34A", ageRange: "4+", description: "Take care of pets!" },
-  { id: "karaoke-kids", title: "Karaoke Kids", emoji: "🎤", category: "Simulation", color: "#E91E63", ageRange: "4+", description: "Sing along to songs!" },
-  { id: "symphony-conductor", title: "Symphony Conductor", emoji: "🎼", category: "Simulation", color: "#3F51B5", ageRange: "5+", description: "Conduct the orchestra!" },
-  { id: "drum-beat", title: "Drum Beat", emoji: "🥁", category: "Simulation", color: "#795548", ageRange: "4+", description: "Play the drums!" },
+  { id: "weather-dress", title: "Weather Dress", emoji: "🌤️", category: "Simulation", age: "4+", desc: "Dress up!" },
+  { id: "music-maker", title: "Music Maker", emoji: "🎵", category: "Simulation", age: "4+", desc: "Make music!" },
+  { id: "traffic-light", title: "Traffic Light", emoji: "🚦", category: "Simulation", age: "4+", desc: "Stop and go!" },
+  { id: "pet-vet", title: "Pet Vet", emoji: "🐕", category: "Simulation", age: "4+", desc: "Care for pets!" },
+  { id: "karaoke-kids", title: "Karaoke", emoji: "🎤", category: "Simulation", age: "4+", desc: "Sing along!" },
+  { id: "symphony-conductor", title: "Symphony", emoji: "🎼", category: "Simulation", age: "5+", desc: "Conduct music!" },
+  { id: "drum-beat", title: "Drum Beat", emoji: "🥁", category: "Simulation", age: "4+", desc: "Play drums!" },
 
   // Matching
-  { id: "sound-match", title: "Sound Match", emoji: "🔊", category: "Matching", color: "#00BCD4", ageRange: "4+", description: "Match sounds to pictures!" },
-  { id: "spin-and-match", title: "Spin and Match", emoji: "🎰", category: "Matching", color: "#9C27B0", ageRange: "4+", description: "Spin wheels to match symbols!" },
-  { id: "pop-the-lock", title: "Pop the Lock", emoji: "🔓", category: "Matching", color: "#FFC107", ageRange: "5+", description: "Tap at the right moment!" },
-  { id: "ant-trail", title: "Ant Trail", emoji: "🐜", category: "Matching", color: "#5D4037", ageRange: "4+", description: "Guide ants to food!" },
-  { id: "bubble-bath", title: "Bubble Bath", emoji: "🛁", category: "Matching", color: "#81D4FA", ageRange: "3+", description: "Pop bubbles in the bath!" },
+  { id: "sound-match", title: "Sound Match", emoji: "🔊", category: "Matching", age: "4+", desc: "Match sounds!" },
+  { id: "spin-and-match", title: "Spin Match", emoji: "🎰", category: "Matching", age: "4+", desc: "Spin to match!" },
+  { id: "pop-the-lock", title: "Pop the Lock", emoji: "🔓", category: "Matching", age: "5+", desc: "Timing game!" },
+  { id: "ant-trail", title: "Ant Trail", emoji: "🐜", category: "Matching", age: "4+", desc: "Guide ants!" },
+  { id: "bubble-bath", title: "Bubble Bath", emoji: "🛁", category: "Matching", age: "3+", desc: "Bath bubbles!" },
 
   // Skill
-  { id: "race-the-timer", title: "Race the Timer", emoji: "⏱️", category: "Skill", color: "#FF5722", ageRange: "5+", description: "Beat the clock!" },
-  { id: "gear-spin", title: "Gear Spin", emoji: "⚙️", category: "Skill", color: "#607D8B", ageRange: "5+", description: "Connect spinning gears!" },
-  { id: "shadow-puppets", title: "Shadow Puppets", emoji: "🕊️", category: "Skill", color: "#37474F", ageRange: "4+", description: "Make shadow puppets!" },
-  { id: "piano-tiles-drop", title: "Piano Tiles Drop", emoji: "🎹", category: "Skill", color: "#212121", ageRange: "5+", description: "Catch falling piano tiles!" },
+  { id: "race-the-timer", title: "Race Timer", emoji: "⏱️", category: "Skill", age: "5+", desc: "Beat clock!" },
+  { id: "gear-spin", title: "Gear Spin", emoji: "⚙️", category: "Skill", age: "5+", desc: "Connect gears!" },
+  { id: "shadow-puppets", title: "Shadow Puppets", emoji: "🕊️", category: "Skill", age: "4+", desc: "Hand shadows!" },
+  { id: "piano-tiles-drop", title: "Piano Tiles", emoji: "🎹", category: "Skill", age: "5+", desc: "Catch tiles!" },
 ];
 
 const CATEGORIES = ["All", "Puzzle", "Arcade", "Creative", "Educational", "Adventure", "Nature", "Physics", "Simulation", "Matching", "Skill"];
 
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [category, setCategory] = useState("All");
 
-  const filteredGames = useMemo(() => {
-    return ALL_GAMES.filter(game => {
-      const matchesSearch = game.title.toLowerCase().includes(search.toLowerCase()) ||
-                           game.description.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = selectedCategory === "All" || game.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+  const filtered = useMemo(() => {
+    return ALL_GAMES.filter(g => {
+      const matchSearch = g.title.toLowerCase().includes(search.toLowerCase()) ||
+                          g.desc.toLowerCase().includes(search.toLowerCase());
+      const matchCat = category === "All" || g.category === category;
+      return matchSearch && matchCat;
     });
-  }, [search, selectedCategory]);
+  }, [search, category]);
 
-  const gamesByCategory = useMemo(() => {
-    if (selectedCategory !== "All") {
-      return { [selectedCategory]: filteredGames };
-    }
-    const grouped: Record<string, typeof ALL_GAMES> = {};
-    filteredGames.forEach(game => {
-      if (!grouped[game.category]) grouped[game.category] = [];
-      grouped[game.category].push(game);
+  const catCounts = useMemo(() => {
+    const counts: Record<string, number> = { All: ALL_GAMES.length };
+    ALL_GAMES.forEach(g => {
+      counts[g.category] = (counts[g.category] || 0) + 1;
     });
-    return grouped;
-  }, [filteredGames, selectedCategory]);
+    return counts;
+  }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#F7FFF7] to-[#E8FFF8]">
+    <main className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-sm shadow-md p-4">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-black text-center mb-4 bg-gradient-to-r from-[#4ECDC4] via-[#FF6B6B] to-[#FFE66D] bg-clip-text text-transparent">
-            🎮 Kids Games Hub 🎨
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <h1 className="text-2xl md:text-3xl font-black text-center mb-3 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 bg-clip-text text-transparent">
+            🎮 Kids Games Hub — {ALL_GAMES.length} Games!
           </h1>
           
-          {/* Search */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-2xl">🔍</span>
-              <input
-                type="text"
-                placeholder="Search games..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-[#4ECDC4]/30 focus:border-[#4ECDC4] focus:outline-none text-lg"
-              />
-            </div>
+          {/* Search Bar */}
+          <div className="relative max-w-xl mx-auto mb-3">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xl">🔍</span>
+            <input
+              type="text"
+              placeholder="Search games... try pokemon or puzzle"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl border-2 border-purple-200 focus:border-purple-500 focus:outline-none text-base bg-white"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            )}
           </div>
-          
+
           {/* Category Pills */}
-          <div className="flex flex-wrap gap-2 mt-3 justify-center">
-            {CATEGORIES.map(cat => {
-              const count = cat === "All" ? ALL_GAMES.length : ALL_GAMES.filter(g => g.category === cat).length;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-bold transition-all ${
-                    selectedCategory === cat
-                      ? "bg-[#4ECDC4] text-white shadow-lg scale-105"
-                      : "bg-white text-gray-600 hover:bg-[#4ECDC4]/20 border-2 border-[#4ECDC4]/30"
-                  }`}
-                >
-                  {cat} <span className="opacity-70">({count})</span>
-                </button>
-              );
-            })}
+          <div className="flex flex-wrap gap-1.5 justify-center">
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setCategory(cat)}
+                className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${
+                  category === cat
+                    ? "bg-purple-500 text-white shadow"
+                    : "bg-white text-gray-600 hover:bg-purple-100 border border-purple-200"
+                }`}
+              >
+                {cat} <span className="opacity-60">({catCounts[cat] || 0})</span>
+              </button>
+            ))}
           </div>
         </div>
       </header>
 
-      {/* Games */}
-      <section className="max-w-6xl mx-auto p-4">
-        <p className="text-center text-gray-600 mb-4 font-semibold">
-          {filteredGames.length} game{filteredGames.length !== 1 ? "s" : ""} found
+      {/* Results count */}
+      <div className="max-w-7xl mx-auto px-4 py-2">
+        <p className="text-center text-sm text-gray-500">
+          Showing {filtered.length} game{filtered.length !== 1 ? "s" : ""}
+          {search && ` matching "${search}"`}
+          {category !== "All" && ` in ${category}`}
         </p>
+      </div>
 
-        {Object.entries(gamesByCategory).map(([category, games]) => (
-          <div key={category} className="mb-8">
-            {selectedCategory === "All" && (
-              <h2 className="text-2xl font-bold mb-4 text-gray-700 flex items-center gap-2">
-                <span>{games[0]?.emoji || "🎮"}</span> {category}
-                <span className="text-sm font-normal text-gray-400">({games.length})</span>
-              </h2>
-            )}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-              {games.map((game) => (
-                <Link
-                  key={game.id}
-                  href={`/games/${game.id}`}
-                  className="group block"
-                >
-                  <div 
-                    className="bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all hover:scale-105 border-2 border-transparent hover:border-[#4ECDC4] h-full flex flex-col"
-                    style={{ borderTop: `4px solid ${game.color}` }}
-                  >
-                    <div className="text-4xl text-center mb-2 group-hover:scale-110 transition-transform">
-                      {game.emoji}
-                    </div>
-                    <h3 className="font-bold text-sm text-center text-gray-800 leading-tight">
-                      {game.title}
-                    </h3>
-                    <p className="text-xs text-gray-500 text-center mt-1 line-clamp-2">
-                      {game.description}
-                    </p>
-                    <div className="mt-auto pt-2 flex justify-between items-center">
-                      <span 
-                        className="text-xs font-bold px-2 py-0.5 rounded-full text-white"
-                        style={{ backgroundColor: game.color }}
-                      >
-                        {game.ageRange}
-                      </span>
-                      <span className="text-xs text-gray-400">{game.category}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        ))}
+      {/* Games Grid */}
+      <section className="max-w-7xl mx-auto px-4 pb-8">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2">
+          {filtered.map(game => (
+            <Link
+              key={game.id}
+              href={`/games/${game.id}`}
+              className="group"
+            >
+              <div className="bg-white rounded-xl p-2.5 shadow hover:shadow-lg transition-all hover:scale-105 border-2 border-transparent hover:border-purple-400 h-full flex flex-col items-center text-center">
+                <span className="text-3xl group-hover:scale-110 transition-transform">
+                  {game.emoji}
+                </span>
+                <h3 className="font-bold text-xs mt-1 text-gray-800 leading-tight line-clamp-2">
+                  {game.title}
+                </h3>
+                <div className="flex items-center gap-1 mt-auto pt-1">
+                  <span className="text-[10px] bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded font-semibold">
+                    {game.age}
+                  </span>
+                  <span className="text-[10px] text-gray-400">
+                    {game.category}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
 
-        {filteredGames.length === 0 && (
-          <div className="text-center py-20">
-            <div className="text-6xl mb-4">🔍</div>
-            <h2 className="text-2xl font-bold text-gray-600">No games found</h2>
-            <p className="text-gray-500 mt-2">Try a different search or category</p>
+        {filtered.length === 0 && (
+          <div className="text-center py-16">
+            <div className="text-5xl mb-3">🔍</div>
+            <h2 className="text-xl font-bold text-gray-600">No games found</h2>
+            <p className="text-gray-500 mt-1">Try a different search term</p>
+            <button
+              onClick={() => { setSearch(""); setCategory("All"); }}
+              className="mt-4 px-4 py-2 bg-purple-500 text-white rounded-lg font-bold"
+            >
+              Show All Games
+            </button>
           </div>
         )}
       </section>
 
       {/* Footer */}
-      <footer className="text-center py-8 text-gray-600 font-semibold">
-        <p>🌟 {ALL_GAMES.length} fun games for kids everywhere! 🌟</p>
+      <footer className="text-center py-4 text-gray-500 text-sm">
+        <p>🌟 {ALL_GAMES.length} fun games for kids! 🌟</p>
       </footer>
     </main>
   );
