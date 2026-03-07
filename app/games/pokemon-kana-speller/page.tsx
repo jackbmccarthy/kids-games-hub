@@ -19,69 +19,52 @@ const TOTAL_POKEMON = 1025;
 
 // All individual kana characters with stroke count
 const ALL_KANA = [
-  // Vowels
   { kana: 'ア', romaji: 'a', strokes: 2 }, { kana: 'イ', romaji: 'i', strokes: 2 }, 
   { kana: 'ウ', romaji: 'u', strokes: 3 }, { kana: 'エ', romaji: 'e', strokes: 2 }, 
   { kana: 'オ', romaji: 'o', strokes: 3 },
-  // K-row
   { kana: 'カ', romaji: 'ka', strokes: 2 }, { kana: 'キ', romaji: 'ki', strokes: 2 }, 
   { kana: 'ク', romaji: 'ku', strokes: 2 }, { kana: 'ケ', romaji: 'ke', strokes: 3 }, 
   { kana: 'コ', romaji: 'ko', strokes: 2 },
-  // S-row
   { kana: 'サ', romaji: 'sa', strokes: 3 }, { kana: 'シ', romaji: 'shi', strokes: 3 }, 
   { kana: 'ス', romaji: 'su', strokes: 2 }, { kana: 'セ', romaji: 'se', strokes: 2 }, 
   { kana: 'ソ', romaji: 'so', strokes: 2 },
-  // T-row
   { kana: 'タ', romaji: 'ta', strokes: 4 }, { kana: 'チ', romaji: 'chi', strokes: 3 }, 
   { kana: 'ツ', romaji: 'tsu', strokes: 3 }, { kana: 'テ', romaji: 'te', strokes: 3 }, 
   { kana: 'ト', romaji: 'to', strokes: 2 },
-  // N-row
   { kana: 'ナ', romaji: 'na', strokes: 2 }, { kana: 'ニ', romaji: 'ni', strokes: 3 }, 
   { kana: 'ヌ', romaji: 'nu', strokes: 4 }, { kana: 'ネ', romaji: 'ne', strokes: 4 }, 
   { kana: 'ノ', romaji: 'no', strokes: 1 },
-  // H-row
   { kana: 'ハ', romaji: 'ha', strokes: 2 }, { kana: 'ヒ', romaji: 'hi', strokes: 2 }, 
   { kana: 'フ', romaji: 'fu', strokes: 1 }, { kana: 'ヘ', romaji: 'he', strokes: 1 }, 
   { kana: 'ホ', romaji: 'ho', strokes: 4 },
-  // M-row
   { kana: 'マ', romaji: 'ma', strokes: 3 }, { kana: 'ミ', romaji: 'mi', strokes: 3 }, 
   { kana: 'ム', romaji: 'mu', strokes: 2 }, { kana: 'メ', romaji: 'me', strokes: 2 }, 
   { kana: 'モ', romaji: 'mo', strokes: 3 },
-  // Y-row
   { kana: 'ヤ', romaji: 'ya', strokes: 3 }, { kana: 'ユ', romaji: 'yu', strokes: 2 }, 
   { kana: 'ヨ', romaji: 'yo', strokes: 3 },
-  // R-row
   { kana: 'ラ', romaji: 'ra', strokes: 2 }, { kana: 'リ', romaji: 'ri', strokes: 2 }, 
   { kana: 'ル', romaji: 'ru', strokes: 2 }, { kana: 'レ', romaji: 're', strokes: 1 }, 
   { kana: 'ロ', romaji: 'ro', strokes: 3 },
-  // W-row
   { kana: 'ワ', romaji: 'wa', strokes: 2 }, { kana: 'ヲ', romaji: 'wo', strokes: 3 }, 
   { kana: 'ン', romaji: 'n', strokes: 1 },
-  // G-row
   { kana: 'ガ', romaji: 'ga', strokes: 3 }, { kana: 'ギ', romaji: 'gi', strokes: 3 }, 
   { kana: 'グ', romaji: 'gu', strokes: 3 }, { kana: 'ゲ', romaji: 'ge', strokes: 4 }, 
   { kana: 'ゴ', romaji: 'go', strokes: 3 },
-  // Z-row
   { kana: 'ザ', romaji: 'za', strokes: 4 }, { kana: 'ジ', romaji: 'ji', strokes: 4 }, 
   { kana: 'ズ', romaji: 'zu', strokes: 3 }, { kana: 'ゼ', romaji: 'ze', strokes: 3 }, 
   { kana: 'ゾ', romaji: 'zo', strokes: 3 },
-  // D-row
   { kana: 'ダ', romaji: 'da', strokes: 5 }, { kana: 'ヂ', romaji: 'ji', strokes: 4 }, 
   { kana: 'ヅ', romaji: 'zu', strokes: 4 }, { kana: 'デ', romaji: 'de', strokes: 4 }, 
   { kana: 'ド', romaji: 'do', strokes: 3 },
-  // B-row
   { kana: 'バ', romaji: 'ba', strokes: 3 }, { kana: 'ビ', romaji: 'bi', strokes: 3 }, 
   { kana: 'ブ', romaji: 'bu', strokes: 2 }, { kana: 'ベ', romaji: 'be', strokes: 2 }, 
   { kana: 'ボ', romaji: 'bo', strokes: 5 },
-  // P-row
   { kana: 'パ', romaji: 'pa', strokes: 3 }, { kana: 'ピ', romaji: 'pi', strokes: 3 }, 
   { kana: 'プ', romaji: 'pu', strokes: 2 }, { kana: 'ペ', romaji: 'pe', strokes: 2 }, 
   { kana: 'ポ', romaji: 'po', strokes: 5 },
-  // Special
   { kana: 'ヴ', romaji: 'vu', strokes: 2 }, { kana: 'ー', romaji: '-', strokes: 1 },
 ];
 
-// Kana to Romaji lookup
 const KANA_TO_ROMAJI: Record<string, string> = {
   'ア': 'a', 'イ': 'i', 'ウ': 'u', 'エ': 'e', 'オ': 'o',
   'カ': 'ka', 'キ': 'ki', 'ク': 'ku', 'ケ': 'ke', 'コ': 'ko',
@@ -98,12 +81,10 @@ const KANA_TO_ROMAJI: Record<string, string> = {
   'ダ': 'da', 'ヂ': 'ji', 'ヅ': 'zu', 'デ': 'de', 'ド': 'do',
   'バ': 'ba', 'ビ': 'bi', 'ブ': 'bu', 'ベ': 'be', 'ボ': 'bo',
   'パ': 'pa', 'ピ': 'pi', 'プ': 'pu', 'ペ': 'pe', 'ポ': 'po',
-  'ヴ': 'vu', 'ー': '-',
-  'ァ': 'a', 'ィ': 'i', 'ゥ': 'u', 'ェ': 'e', 'ォ': 'o',
+  'ヴ': 'vu', 'ー': '-', 'ァ': 'a', 'ィ': 'i', 'ゥ': 'u', 'ェ': 'e', 'ォ': 'o',
   'ャ': 'ya', 'ュ': 'yu', 'ョ': 'yo', 'ッ': 'tsu',
 };
 
-// Generation ranges
 const GENERATIONS = [
   { num: 0, name: "All Pokémon", range: "", start: 1, end: 1025 },
   { num: 1, name: "Gen 1 (Kanto)", range: "1-151", start: 1, end: 151 },
@@ -125,13 +106,70 @@ function getKanaInfo(kana: string) {
   return ALL_KANA.find(k => k.kana === kana);
 }
 
+// Sparkle Animation Component
+function Sparkles({ active, x, y }: { active: boolean; x: number; y: number }) {
+  if (!active) return null;
+  
+  const sparkles = Array.from({ length: 12 }, (_, i) => {
+    const angle = (i * 30) * (Math.PI / 180);
+    const distance = 60 + Math.random() * 40;
+    return {
+      id: i,
+      x: Math.cos(angle) * distance,
+      y: Math.sin(angle) * distance,
+      delay: Math.random() * 0.2,
+      size: 12 + Math.random() * 16,
+      emoji: ['⭐', '✨', '🌟', '💫'][Math.floor(Math.random() * 4)],
+    };
+  });
+
+  return (
+    <div 
+      className="fixed pointer-events-none z-50"
+      style={{ left: x, top: y }}
+    >
+      {sparkles.map(sparkle => (
+        <div
+          key={sparkle.id}
+          className="absolute animate-sparkle"
+          style={{
+            '--sparkle-x': `${sparkle.x}px`,
+            '--sparkle-y': `${sparkle.y}px`,
+            animationDelay: `${sparkle.delay}s`,
+            fontSize: sparkle.size,
+          } as React.CSSProperties}
+        >
+          {sparkle.emoji}
+        </div>
+      ))}
+      <style jsx>{`
+        @keyframes sparkle {
+          0% {
+            transform: translate(0, 0) scale(0);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(var(--sparkle-x), var(--sparkle-y)) scale(1);
+            opacity: 0;
+          }
+        }
+        .animate-sparkle {
+          animation: sparkle 0.6s ease-out forwards;
+        }
+      `}</style>
+    </div>
+  );
+}
+
 // Drawing Canvas Component
 function DrawingCanvas({ 
   targetKana, 
-  onComplete 
+  onComplete,
+  onSparkle
 }: { 
   targetKana: string; 
   onComplete: () => void;
+  onSparkle: (x: number, y: number) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -140,7 +178,6 @@ function DrawingCanvas({
   
   const kanaInfo = getKanaInfo(targetKana);
 
-  // Clear canvas
   const clearCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -150,7 +187,6 @@ function DrawingCanvas({
     setHasDrawn(false);
   }, []);
 
-  // Get position from event
   const getPos = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
@@ -172,7 +208,6 @@ function DrawingCanvas({
     }
   }, []);
 
-  // Start drawing
   const startDrawing = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const pos = getPos(e);
     if (!pos) return;
@@ -181,7 +216,6 @@ function DrawingCanvas({
     setHasDrawn(true);
   }, [getPos]);
 
-  // Draw
   const draw = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawing) return;
     const canvas = canvasRef.current;
@@ -203,15 +237,26 @@ function DrawingCanvas({
     lastPosRef.current = pos;
   }, [isDrawing, getPos]);
 
-  // Stop drawing
   const stopDrawing = useCallback(() => {
     setIsDrawing(false);
     lastPosRef.current = null;
   }, []);
 
+  const handleComplete = useCallback(() => {
+    if (!hasDrawn) return;
+    
+    // Trigger sparkle animation from canvas center
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      onSparkle(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
+    
+    onComplete();
+  }, [hasDrawn, onComplete, onSparkle]);
+
   return (
     <div className="flex flex-col items-center">
-      {/* Instructions */}
       <div className="text-center mb-3">
         <p className="text-lg font-bold text-gray-800">
           Draw: <span className="text-3xl text-blue-600">{targetKana}</span>
@@ -221,9 +266,7 @@ function DrawingCanvas({
         </p>
       </div>
 
-      {/* Canvas container with guide character */}
-      <div className="relative bg-white rounded-2xl border-4 border-blue-200 shadow-lg">
-        {/* Guide character (faded background) */}
+      <div className="relative bg-white rounded-2xl border-4 border-blue-200 shadow-lg overflow-hidden">
         <div 
           className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
           aria-hidden="true"
@@ -233,7 +276,6 @@ function DrawingCanvas({
           </span>
         </div>
         
-        {/* Drawing canvas */}
         <canvas
           ref={canvasRef}
           width={280}
@@ -249,12 +291,10 @@ function DrawingCanvas({
         />
       </div>
 
-      {/* Stroke hint */}
       <p className="text-xs text-gray-400 mt-2">
         💡 Trace the gray character with your finger!
       </p>
 
-      {/* Action buttons */}
       <div className="flex gap-2 mt-4">
         <button
           onClick={clearCanvas}
@@ -263,15 +303,11 @@ function DrawingCanvas({
           🗑️ Clear
         </button>
         <button
-          onClick={() => {
-            if (hasDrawn) {
-              onComplete();
-            }
-          }}
+          onClick={handleComplete}
           disabled={!hasDrawn}
           className={`px-6 py-2 rounded-lg font-bold text-sm transition-all ${
             hasDrawn
-              ? "bg-green-500 hover:bg-green-600 text-white"
+              ? "bg-green-500 hover:bg-green-600 text-white animate-pulse"
               : "bg-gray-200 text-gray-400 cursor-not-allowed"
           }`}
         >
@@ -296,8 +332,12 @@ export default function PokemonKanaSpellerPage() {
   const [selectedKana, setSelectedKana] = useState<string | null>(null);
   const [kanaPool, setKanaPool] = useState<Pokemon[]>([]);
   const [seen, setSeen] = useState<Set<number>>(new Set());
+  
+  // Animation states
+  const [sparklePos, setSparklePos] = useState({ x: 0, y: 0, active: false });
+  const [slotSparkles, setSlotSparkles] = useState<Record<number, { x: number; y: number; active: boolean }>>({});
+  const slotRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Calculate kana usage counts
   const kanaCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     allPokemon.forEach(p => {
@@ -321,25 +361,19 @@ export default function PokemonKanaSpellerPage() {
         setAllPokemon(data);
         setPhase("menu");
       })
-      .catch(err => {
-        console.error('Failed to load Pokemon data:', err);
-      });
+      .catch(err => console.error('Failed to load Pokemon data:', err));
     
     const savedScore = localStorage.getItem("pokemon-kana-score");
     if (savedScore) setScore(parseInt(savedScore, 10) || 0);
     
     const savedSeen = localStorage.getItem("pokemon-kana-seen");
     if (savedSeen) {
-      try {
-        setSeen(new Set(JSON.parse(savedSeen)));
-      } catch {}
+      try { setSeen(new Set(JSON.parse(savedSeen))); } catch {}
     }
     
     const savedCompleted = localStorage.getItem("pokemon-kana-completed");
     if (savedCompleted) {
-      try {
-        setCompleted(new Set(JSON.parse(savedCompleted)));
-      } catch {}
+      try { setCompleted(new Set(JSON.parse(savedCompleted))); } catch {}
     }
   }, []);
 
@@ -364,7 +398,34 @@ export default function PokemonKanaSpellerPage() {
     window.speechSynthesis.speak(utterance);
   }, []);
 
-  // Start game by generation
+  // Trigger sparkle from canvas
+  const handleCanvasSparkle = useCallback((x: number, y: number) => {
+    setSparklePos({ x, y, active: true });
+    setTimeout(() => setSparklePos(prev => ({ ...prev, active: false })), 700);
+  }, []);
+
+  // Trigger sparkle from slot
+  const triggerSlotSparkle = useCallback((slotIndex: number) => {
+    const slotEl = slotRefs.current[slotIndex];
+    if (!slotEl) return;
+    
+    const rect = slotEl.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    
+    setSlotSparkles(prev => ({
+      ...prev,
+      [slotIndex]: { x, y, active: true }
+    }));
+    
+    setTimeout(() => {
+      setSlotSparkles(prev => ({
+        ...prev,
+        [slotIndex]: { ...prev[slotIndex], active: false }
+      }));
+    }, 700);
+  }, []);
+
   const startGameByGeneration = useCallback((gen: number) => {
     setMode("generation");
     setGeneration(gen);
@@ -384,7 +445,6 @@ export default function PokemonKanaSpellerPage() {
     setPhase("playing");
   }, [allPokemon, completed]);
 
-  // Start game by kana
   const startGameByKana = useCallback((kana: string) => {
     setMode("kana");
     setSelectedKana(kana);
@@ -403,21 +463,21 @@ export default function PokemonKanaSpellerPage() {
     setPhase("playing");
   }, [getPokemonWithKana, completed]);
 
-  // Handle character drawn
   const handleCharacterComplete = useCallback(() => {
     if (!currentPokemon) return;
     
     const kana = currentPokemon.kana[currentSlotIndex];
-    
-    // Speak the kana
     speakJapanese(kana);
     
-    // Fill the slot
     const newFilled = [...filledSlots];
     newFilled[currentSlotIndex] = kana;
     setFilledSlots(newFilled);
     
-    // Check if complete
+    // Trigger slot sparkle after a tiny delay (let canvas sparkle finish)
+    setTimeout(() => {
+      triggerSlotSparkle(currentSlotIndex);
+    }, 300);
+    
     if (currentSlotIndex === currentPokemon.kana.length - 1) {
       setTimeout(() => {
         speakJapanese(currentPokemon.japanese);
@@ -426,14 +486,12 @@ export default function PokemonKanaSpellerPage() {
         setCompleted(prev => new Set([...prev, currentPokemon.id]));
         setSeen(prev => new Set([...prev, currentPokemon.id]));
         setPhase("complete");
-      }, 400);
+      }, 600);
     } else {
-      // Move to next slot
       setCurrentSlotIndex(currentSlotIndex + 1);
     }
-  }, [currentPokemon, currentSlotIndex, filledSlots, speakJapanese, streak]);
+  }, [currentPokemon, currentSlotIndex, filledSlots, speakJapanese, streak, triggerSlotSparkle]);
 
-  // Next Pokemon
   const nextPokemon = useCallback(() => {
     if (!currentPokemon) return;
     
@@ -462,6 +520,12 @@ export default function PokemonKanaSpellerPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-red-500 via-yellow-400 to-red-500 p-4">
+      {/* Sparkle animations */}
+      <Sparkles active={sparklePos.active} x={sparklePos.x} y={sparklePos.y} />
+      {Object.entries(slotSparkles).map(([idx, pos]) => (
+        <Sparkles key={idx} active={pos.active} x={pos.x} y={pos.y} />
+      ))}
+
       {/* Header */}
       <div className="text-center mb-4">
         <h1 className="text-2xl md:text-3xl font-black text-white drop-shadow-lg">
@@ -494,7 +558,6 @@ export default function PokemonKanaSpellerPage() {
             <p className="text-xs text-green-600">Draw kana to spell Pokémon names!</p>
           </div>
 
-          {/* Mode tabs */}
           <div className="flex gap-2 mb-4">
             <button
               onClick={() => setMode("generation")}
@@ -603,7 +666,6 @@ export default function PokemonKanaSpellerPage() {
 
       {phase === "playing" && currentPokemon && (
         <div className="max-w-lg mx-auto">
-          {/* Mode indicator */}
           {mode === "kana" && selectedKana && (
             <div className="text-center mb-2">
               <span className="bg-white/30 rounded-full px-3 py-1 text-white font-bold text-sm">
@@ -612,7 +674,6 @@ export default function PokemonKanaSpellerPage() {
             </div>
           )}
 
-          {/* Progress slots */}
           <div className="bg-white rounded-2xl p-4 shadow-lg mb-4">
             <div className="flex items-center gap-3 mb-3">
               <img
@@ -634,7 +695,6 @@ export default function PokemonKanaSpellerPage() {
               </button>
             </div>
             
-            {/* Filled slots */}
             <div className="flex justify-center gap-2 flex-wrap">
               {filledSlots.map((filled, index) => {
                 const targetKana = currentPokemon.kana[index];
@@ -644,14 +704,15 @@ export default function PokemonKanaSpellerPage() {
                 return (
                   <div
                     key={index}
+                    ref={el => { slotRefs.current[index] = el; }}
                     className={`flex flex-col items-center transition-all ${
                       isCurrent ? "scale-110" : ""
                     }`}
                   >
                     <div
-                      className={`w-10 h-12 rounded-lg border-2 flex items-center justify-center text-lg font-bold
+                      className={`w-10 h-12 rounded-lg border-2 flex items-center justify-center text-lg font-bold transition-all
                         ${filled
-                          ? "bg-green-100 border-green-500 text-green-700"
+                          ? "bg-green-100 border-green-500 text-green-700 animate-pop"
                           : isCurrent
                             ? "bg-blue-50 border-blue-400 animate-pulse"
                             : isTargetKana
@@ -670,11 +731,11 @@ export default function PokemonKanaSpellerPage() {
             </div>
           </div>
 
-          {/* Drawing Canvas */}
           <div className="bg-white rounded-2xl p-4 shadow-xl">
             <DrawingCanvas
               targetKana={currentPokemon.kana[currentSlotIndex]}
               onComplete={handleCharacterComplete}
+              onSparkle={handleCanvasSparkle}
             />
           </div>
           
@@ -692,12 +753,23 @@ export default function PokemonKanaSpellerPage() {
               📋 Menu
             </button>
           </div>
+
+          <style jsx>{`
+            @keyframes pop {
+              0% { transform: scale(0.5); opacity: 0; }
+              50% { transform: scale(1.2); }
+              100% { transform: scale(1); opacity: 1; }
+            }
+            .animate-pop {
+              animation: pop 0.3s ease-out forwards;
+            }
+          `}</style>
         </div>
       )}
 
       {phase === "complete" && currentPokemon && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl animate-bounce-in">
             <div className="text-5xl mb-2">🎉</div>
             <h2 className="text-2xl font-black text-green-600 mb-2">Perfect!</h2>
             <img
@@ -731,6 +803,18 @@ export default function PokemonKanaSpellerPage() {
               </button>
             </div>
           </div>
+
+          <style jsx>{`
+            @keyframes bounce-in {
+              0% { transform: scale(0.3); opacity: 0; }
+              50% { transform: scale(1.05); }
+              70% { transform: scale(0.9); }
+              100% { transform: scale(1); opacity: 1; }
+            }
+            .animate-bounce-in {
+              animation: bounce-in 0.5s ease-out forwards;
+            }
+          `}</style>
         </div>
       )}
     </main>
