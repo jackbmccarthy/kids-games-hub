@@ -160,7 +160,7 @@ function Sparkles({ active, x, y }: { active: boolean; x: number; y: number }) {
   );
 }
 
-// Drawing Canvas Component - Auto-detects completion
+// Drawing Canvas Component - Auto-detects completion by checking character overlap
 function DrawingCanvas({ 
   targetKana, 
   onComplete,
@@ -171,29 +171,76 @@ function DrawingCanvas({
   onSparkle: (x: number, y: number) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const maskCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const characterMaskRef = useRef<Uint8Array | null>(null);
+  const characterPixelCountRef = useRef(0);
   const [isDrawing, setIsDrawing] = useState(false);
   const [strokeCount, setStrokeCount] = useState(0);
+  const [completionPercent, setCompletionPercent] = useState(0);
   const lastPosRef = useRef<{x: number, y: number} | null>(null);
   const completedRef = useRef(false);
   
   const kanaInfo = getKanaInfo(targetKana);
   const requiredStrokes = kanaInfo?.strokes || 2;
 
-  // Auto-clear canvas when targetKana changes
+  // Create character mask when targetKana changes
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    
+    // Clear user drawing
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Create hidden canvas for character mask
+    if (!maskCanvasRef.current) {
+      maskCanvasRef.current = document.createElement('canvas');
+    }
+    const maskCanvas = maskCanvasRef.current;
+    maskCanvas.width = canvas.width;
+    maskCanvas.height = canvas.height;
+    
+    const maskCtx = maskCanvas.getContext('2d');
+    if (!maskCtx) return;
+    
+    // Draw the kana character to get its shape
+    maskCtx.fillStyle = 'white';
+    maskCtx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
+    maskCtx.font = '180px sans-serif';
+    maskCtx.textAlign = 'center';
+    maskCtx.textBaseline = 'middle';
+    maskCtx.fillStyle = 'black';
+    maskCtx.fillText(targetKana, maskCanvas.width / 2, maskCanvas.height / 2);
+    
+    // Extract mask - which pixels are part of the character
+    const imageData = maskCtx.getImageData(0, 0, maskCanvas.width, maskCanvas.height);
+    const data = imageData.data;
+    const mask = new Uint8Array(maskCanvas.width * maskCanvas.height);
+    let pixelCount = 0;
+    
+    // A pixel is part of the character if it's darker than light gray
+    for (let i = 0; i < data.length; i += 4) {
+      const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+      // Character pixels are dark (black text on white bg)
+      if (brightness < 200) {
+        mask[i / 4] = 1;
+        pixelCount++;
+      }
+    }
+    
+    characterMaskRef.current = mask;
+    characterPixelCountRef.current = pixelCount;
     setStrokeCount(0);
+    setCompletionPercent(0);
     completedRef.current = false;
   }, [targetKana]);
 
-  // Check if drawing has enough coverage
+  // Check what percentage of the character has been traced
   const checkCoverage = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return 0;
+    const mask = characterMaskRef.current;
+    if (!canvas || !mask) return 0;
     
     const ctx = canvas.getContext('2d');
     if (!ctx) return 0;
@@ -201,28 +248,24 @@ function DrawingCanvas({
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;
     
-    // Count non-transparent pixels in the center region
-    let drawnPixels = 0;
-    const totalPixels = canvas.width * canvas.height;
+    // Count how many character pixels have been drawn over
+    let tracedPixels = 0;
     
-    // Check center 60% of canvas
-    const startX = canvas.width * 0.2;
-    const endX = canvas.width * 0.8;
-    const startY = canvas.height * 0.2;
-    const endY = canvas.height * 0.8;
-    
-    for (let y = Math.floor(startY); y < Math.ceil(endY); y++) {
-      for (let x = Math.floor(startX); x < Math.ceil(endX); x++) {
-        const idx = (y * canvas.width + x) * 4;
-        // Check if pixel has blue color (drawn)
+    for (let i = 0; i < mask.length; i++) {
+      if (mask[i] === 1) {
+        // This pixel is part of the character - check if user drew here
+        const idx = i * 4;
+        // Check for blue drawing color
         if (data[idx + 2] > 200 && data[idx + 3] > 0) {
-          drawnPixels++;
+          tracedPixels++;
         }
       }
     }
     
-    const centerArea = (endX - startX) * (endY - startY);
-    return drawnPixels / centerArea;
+    const totalCharacterPixels = characterPixelCountRef.current;
+    if (totalCharacterPixels === 0) return 0;
+    
+    return tracedPixels / totalCharacterPixels;
   }, []);
 
   // Clear canvas manually
@@ -297,24 +340,23 @@ function DrawingCanvas({
     const newStrokeCount = strokeCount + 1;
     setStrokeCount(newStrokeCount);
     
-    // Check if we have enough strokes and coverage
-    if (newStrokeCount >= requiredStrokes) {
-      const coverage = checkCoverage();
-      // Need at least 8% coverage in center area (kana characters are sparse)
-      if (coverage > 0.08) {
-        // Auto-complete!
-        completedRef.current = true;
-        
-        // Small delay for satisfaction
-        setTimeout(() => {
-          const canvas = canvasRef.current;
-          if (canvas) {
-            const rect = canvas.getBoundingClientRect();
-            onSparkle(rect.left + rect.width / 2, rect.top + rect.height / 2);
-          }
-          onComplete();
-        }, 200);
-      }
+    // Check coverage - what percentage of character is traced
+    const percent = checkCoverage();
+    setCompletionPercent(Math.round(percent * 100));
+    
+    // Auto-complete if enough strokes AND enough coverage (35% of character traced)
+    if (newStrokeCount >= requiredStrokes && percent >= 0.35) {
+      completedRef.current = true;
+      
+      // Short delay for satisfaction
+      setTimeout(() => {
+        const canvas = canvasRef.current;
+        if (canvas) {
+          const rect = canvas.getBoundingClientRect();
+          onSparkle(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        }
+        onComplete();
+      }, 200);
     }
   }, [isDrawing, strokeCount, requiredStrokes, checkCoverage, onSparkle, onComplete]);
 
@@ -337,6 +379,9 @@ function DrawingCanvas({
             />
           ))}
         </div>
+        <p className="text-xs mt-1 font-semibold" style={{ color: completionPercent >= 35 ? '#22c55e' : '#6b7280' }}>
+          {completionPercent}% traced {completionPercent >= 35 && '✓'}
+        </p>
       </div>
 
       <div className="relative bg-white rounded-2xl border-4 border-blue-200 shadow-lg overflow-hidden">
