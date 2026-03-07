@@ -17,7 +17,6 @@ interface Pokemon {
 
 const TOTAL_POKEMON = 1025;
 
-// All individual kana characters with stroke count
 const ALL_KANA = [
   { kana: 'ア', romaji: 'a', strokes: 2 }, { kana: 'イ', romaji: 'i', strokes: 2 }, 
   { kana: 'ウ', romaji: 'u', strokes: 3 }, { kana: 'エ', romaji: 'e', strokes: 2 }, 
@@ -161,7 +160,7 @@ function Sparkles({ active, x, y }: { active: boolean; x: number; y: number }) {
   );
 }
 
-// Drawing Canvas Component
+// Drawing Canvas Component - Auto-detects completion
 function DrawingCanvas({ 
   targetKana, 
   onComplete,
@@ -173,18 +172,68 @@ function DrawingCanvas({
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [hasDrawn, setHasDrawn] = useState(false);
+  const [strokeCount, setStrokeCount] = useState(0);
   const lastPosRef = useRef<{x: number, y: number} | null>(null);
+  const completedRef = useRef(false);
   
   const kanaInfo = getKanaInfo(targetKana);
+  const requiredStrokes = kanaInfo?.strokes || 2;
 
+  // Auto-clear canvas when targetKana changes
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setStrokeCount(0);
+    completedRef.current = false;
+  }, [targetKana]);
+
+  // Check if drawing has enough coverage
+  const checkCoverage = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return 0;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return 0;
+    
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    
+    // Count non-transparent pixels in the center region
+    let drawnPixels = 0;
+    const totalPixels = canvas.width * canvas.height;
+    
+    // Check center 60% of canvas
+    const startX = canvas.width * 0.2;
+    const endX = canvas.width * 0.8;
+    const startY = canvas.height * 0.2;
+    const endY = canvas.height * 0.8;
+    
+    for (let y = Math.floor(startY); y < Math.ceil(endY); y++) {
+      for (let x = Math.floor(startX); x < Math.ceil(endX); x++) {
+        const idx = (y * canvas.width + x) * 4;
+        // Check if pixel has blue color (drawn)
+        if (data[idx + 2] > 200 && data[idx + 3] > 0) {
+          drawnPixels++;
+        }
+      }
+    }
+    
+    const centerArea = (endX - startX) * (endY - startY);
+    return drawnPixels / centerArea;
+  }, []);
+
+  // Clear canvas manually
   const clearCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setHasDrawn(false);
+    setStrokeCount(0);
+    completedRef.current = false;
   }, []);
 
   const getPos = useCallback((e: React.MouseEvent | React.TouchEvent) => {
@@ -209,15 +258,15 @@ function DrawingCanvas({
   }, []);
 
   const startDrawing = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    if (completedRef.current) return; // Don't draw if completed
     const pos = getPos(e);
     if (!pos) return;
     setIsDrawing(true);
     lastPosRef.current = pos;
-    setHasDrawn(true);
   }, [getPos]);
 
   const draw = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing) return;
+    if (!isDrawing || completedRef.current) return;
     const canvas = canvasRef.current;
     const pos = getPos(e);
     if (!canvas || !pos || !lastPosRef.current) return;
@@ -227,7 +276,7 @@ function DrawingCanvas({
     
     ctx.beginPath();
     ctx.strokeStyle = '#3b82f6';
-    ctx.lineWidth = 8;
+    ctx.lineWidth = 10;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
@@ -238,22 +287,36 @@ function DrawingCanvas({
   }, [isDrawing, getPos]);
 
   const stopDrawing = useCallback(() => {
+    if (!isDrawing) return;
     setIsDrawing(false);
     lastPosRef.current = null;
-  }, []);
-
-  const handleComplete = useCallback(() => {
-    if (!hasDrawn) return;
     
-    // Trigger sparkle animation from canvas center
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const rect = canvas.getBoundingClientRect();
-      onSparkle(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    if (completedRef.current) return;
+    
+    // Count this stroke
+    const newStrokeCount = strokeCount + 1;
+    setStrokeCount(newStrokeCount);
+    
+    // Check if we have enough strokes and coverage
+    if (newStrokeCount >= requiredStrokes) {
+      const coverage = checkCoverage();
+      // Need at least 8% coverage in center area (kana characters are sparse)
+      if (coverage > 0.08) {
+        // Auto-complete!
+        completedRef.current = true;
+        
+        // Small delay for satisfaction
+        setTimeout(() => {
+          const canvas = canvasRef.current;
+          if (canvas) {
+            const rect = canvas.getBoundingClientRect();
+            onSparkle(rect.left + rect.width / 2, rect.top + rect.height / 2);
+          }
+          onComplete();
+        }, 200);
+      }
     }
-    
-    onComplete();
-  }, [hasDrawn, onComplete, onSparkle]);
+  }, [isDrawing, strokeCount, requiredStrokes, checkCoverage, onSparkle, onComplete]);
 
   return (
     <div className="flex flex-col items-center">
@@ -262,8 +325,18 @@ function DrawingCanvas({
           Draw: <span className="text-3xl text-blue-600">{targetKana}</span>
         </p>
         <p className="text-sm text-gray-500">
-          {kanaInfo ? `${kanaInfo.strokes} strokes • ${kanaInfo.romaji}` : getRomaji(targetKana)}
+          {requiredStrokes} strokes • {kanaInfo?.romaji || getRomaji(targetKana)}
         </p>
+        <div className="flex justify-center gap-1 mt-1">
+          {Array.from({ length: requiredStrokes }).map((_, i) => (
+            <div
+              key={i}
+              className={`w-3 h-3 rounded-full transition-all ${
+                i < strokeCount ? 'bg-green-500' : 'bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="relative bg-white rounded-2xl border-4 border-blue-200 shadow-lg overflow-hidden">
@@ -292,28 +365,15 @@ function DrawingCanvas({
       </div>
 
       <p className="text-xs text-gray-400 mt-2">
-        💡 Trace the gray character with your finger!
+        💡 Trace the gray character - it auto-completes when done!
       </p>
 
-      <div className="flex gap-2 mt-4">
-        <button
-          onClick={clearCanvas}
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-bold text-sm"
-        >
-          🗑️ Clear
-        </button>
-        <button
-          onClick={handleComplete}
-          disabled={!hasDrawn}
-          className={`px-6 py-2 rounded-lg font-bold text-sm transition-all ${
-            hasDrawn
-              ? "bg-green-500 hover:bg-green-600 text-white animate-pulse"
-              : "bg-gray-200 text-gray-400 cursor-not-allowed"
-          }`}
-        >
-          ✅ Got it!
-        </button>
-      </div>
+      <button
+        onClick={clearCanvas}
+        className="mt-3 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-bold text-sm"
+      >
+        🗑️ Clear
+      </button>
     </div>
   );
 }
@@ -333,7 +393,6 @@ export default function PokemonKanaSpellerPage() {
   const [kanaPool, setKanaPool] = useState<Pokemon[]>([]);
   const [seen, setSeen] = useState<Set<number>>(new Set());
   
-  // Animation states
   const [sparklePos, setSparklePos] = useState({ x: 0, y: 0, active: false });
   const [slotSparkles, setSlotSparkles] = useState<Record<number, { x: number; y: number; active: boolean }>>({});
   const slotRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -398,13 +457,11 @@ export default function PokemonKanaSpellerPage() {
     window.speechSynthesis.speak(utterance);
   }, []);
 
-  // Trigger sparkle from canvas
   const handleCanvasSparkle = useCallback((x: number, y: number) => {
     setSparklePos({ x, y, active: true });
     setTimeout(() => setSparklePos(prev => ({ ...prev, active: false })), 700);
   }, []);
 
-  // Trigger sparkle from slot
   const triggerSlotSparkle = useCallback((slotIndex: number) => {
     const slotEl = slotRefs.current[slotIndex];
     if (!slotEl) return;
@@ -473,7 +530,6 @@ export default function PokemonKanaSpellerPage() {
     newFilled[currentSlotIndex] = kana;
     setFilledSlots(newFilled);
     
-    // Trigger slot sparkle after a tiny delay (let canvas sparkle finish)
     setTimeout(() => {
       triggerSlotSparkle(currentSlotIndex);
     }, 300);
@@ -520,13 +576,11 @@ export default function PokemonKanaSpellerPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-red-500 via-yellow-400 to-red-500 p-4">
-      {/* Sparkle animations */}
       <Sparkles active={sparklePos.active} x={sparklePos.x} y={sparklePos.y} />
       {Object.entries(slotSparkles).map(([idx, pos]) => (
         <Sparkles key={idx} active={pos.active} x={pos.x} y={pos.y} />
       ))}
 
-      {/* Header */}
       <div className="text-center mb-4">
         <h1 className="text-2xl md:text-3xl font-black text-white drop-shadow-lg">
           ⚡ ポケモン カナ Writer ⚡
@@ -657,9 +711,9 @@ export default function PokemonKanaSpellerPage() {
 
           <div className="mt-4 p-3 bg-white/50 rounded-xl text-sm text-white">
             <p className="font-bold mb-1">How to Play:</p>
-            <p>• Draw each kana character on the canvas</p>
+            <p>• Draw each kana - it auto-detects when done!</p>
             <p>• Trace the gray guide character</p>
-            <p>• Complete all characters to spell the name!</p>
+            <p>• Complete all characters to win!</p>
           </div>
         </div>
       )}
@@ -733,6 +787,7 @@ export default function PokemonKanaSpellerPage() {
 
           <div className="bg-white rounded-2xl p-4 shadow-xl">
             <DrawingCanvas
+              key={currentSlotIndex}
               targetKana={currentPokemon.kana[currentSlotIndex]}
               onComplete={handleCharacterComplete}
               onSparkle={handleCanvasSparkle}
