@@ -3,141 +3,160 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 
-const ALL_GAMES = [
+// Device icons: 📱 = mobile, 💻 = desktop, 📱💻 = both
+type Game = {
+  id: string;
+  title: string;
+  emoji: string;
+  category: string;
+  age: string;
+  desc: string;
+  device: "mobile" | "desktop" | "both";
+};
+
+const ALL_GAMES: Game[] = [
   // Puzzle
-  { id: "word-search", title: "Word Search", emoji: "🔤", category: "Puzzle", age: "5+", desc: "Find hidden words!" },
-  { id: "word-snake", title: "Word Snake", emoji: "🐍", category: "Puzzle", age: "5+", desc: "Connect letters!" },
-  { id: "shadow-match", title: "Shadow Match", emoji: "👤", category: "Puzzle", age: "3+", desc: "Match shadows!" },
-  { id: "memory-mural", title: "Memory Mural", emoji: "🖼️", category: "Puzzle", age: "4+", desc: "Find matching pairs!" },
-  { id: "emoji-match", title: "Emoji Match", emoji: "🎴", category: "Puzzle", age: "4+", desc: "Match emoji!" },
-  { id: "connect-the-dots", title: "Connect Dots", emoji: "🔢", category: "Puzzle", age: "3+", desc: "Connect numbers!" },
-  { id: "pattern-repeat", title: "Pattern Repeat", emoji: "🎵", category: "Puzzle", age: "4+", desc: "Repeat patterns!" },
-  { id: "maze-runner", title: "Maze Runner", emoji: "🏃", category: "Puzzle", age: "5+", desc: "Solve mazes!" },
-  { id: "jigsaw-jam", title: "Jigsaw Jam", emoji: "🧩", category: "Puzzle", age: "4+", desc: "Puzzle pieces!" },
-  { id: "spot-the-difference", title: "Spot Difference", emoji: "👀", category: "Puzzle", age: "4+", desc: "Find differences!" },
-  { id: "star-catcher", title: "Star Catcher", emoji: "⭐", category: "Puzzle", age: "4+", desc: "Connect stars!" },
-  { id: "puzzle-slider", title: "Puzzle Slider", emoji: "🧊", category: "Puzzle", age: "5+", desc: "Slide tiles!" },
-  { id: "slide-puzzle", title: "Slide Puzzle", emoji: "🔄", category: "Puzzle", age: "5+", desc: "Classic slider!" },
-  { id: "domino-chain", title: "Domino Chain", emoji: "🁃", category: "Puzzle", age: "4+", desc: "Chain dominoes!" },
+  { id: "word-search", title: "Word Search", emoji: "🔤", category: "Puzzle", age: "5+", desc: "Find hidden words!", device: "both" },
+  { id: "word-snake", title: "Word Snake", emoji: "🐍", category: "Puzzle", age: "5+", desc: "Connect letters!", device: "both" },
+  { id: "shadow-match", title: "Shadow Match", emoji: "👤", category: "Puzzle", age: "3+", desc: "Match shadows!", device: "mobile" },
+  { id: "memory-mural", title: "Memory Mural", emoji: "🖼️", category: "Puzzle", age: "4+", desc: "Find matching pairs!", device: "mobile" },
+  { id: "emoji-match", title: "Emoji Match", emoji: "🎴", category: "Puzzle", age: "4+", desc: "Match emoji!", device: "mobile" },
+  { id: "connect-the-dots", title: "Connect Dots", emoji: "🔢", category: "Puzzle", age: "3+", desc: "Connect numbers!", device: "both" },
+  { id: "pattern-repeat", title: "Pattern Repeat", emoji: "🎵", category: "Puzzle", age: "4+", desc: "Repeat patterns!", device: "mobile" },
+  { id: "maze-runner", title: "Maze Runner", emoji: "🏃", category: "Puzzle", age: "5+", desc: "Solve mazes!", device: "mobile" },
+  { id: "jigsaw-jam", title: "Jigsaw Jam", emoji: "🧩", category: "Puzzle", age: "4+", desc: "Puzzle pieces!", device: "both" },
+  { id: "spot-the-difference", title: "Spot Difference", emoji: "👀", category: "Puzzle", age: "4+", desc: "Find differences!", device: "mobile" },
+  { id: "star-catcher", title: "Star Catcher", emoji: "⭐", category: "Puzzle", age: "4+", desc: "Connect stars!", device: "both" },
+  { id: "puzzle-slider", title: "Puzzle Slider", emoji: "🧊", category: "Puzzle", age: "5+", desc: "Slide tiles!", device: "mobile" },
+  { id: "slide-puzzle", title: "Slide Puzzle", emoji: "🔄", category: "Puzzle", age: "5+", desc: "Classic slider!", device: "mobile" },
+  { id: "domino-chain", title: "Domino Chain", emoji: "🁃", category: "Puzzle", age: "4+", desc: "Chain dominoes!", device: "both" },
 
   // Arcade
-  { id: "bubble-pop-chain", title: "Bubble Pop", emoji: "🫧", category: "Arcade", age: "4+", desc: "Pop bubbles!" },
-  { id: "dino-jump", title: "Dino Jump", emoji: "🦖", category: "Arcade", age: "4+", desc: "Jump obstacles!" },
-  { id: "whack-a-mole", title: "Whack-a-Mole", emoji: "🔨", category: "Arcade", age: "3+", desc: "Tap the moles!" },
-  { id: "catch-the-rain", title: "Catch Rain", emoji: "🌧️", category: "Arcade", age: "4+", desc: "Catch raindrops!" },
-  { id: "fishing-frenzy", title: "Fishing Frenzy", emoji: "🎣", category: "Arcade", age: "4+", desc: "Catch fish!" },
-  { id: "shape-sorter", title: "Shape Sorter", emoji: "🔷", category: "Arcade", age: "3+", desc: "Sort shapes!" },
-  { id: "balloon-pop", title: "Balloon Pop", emoji: "🎈", category: "Arcade", age: "3+", desc: "Pop balloons!" },
-  { id: "fruit-slice", title: "Fruit Slice", emoji: "🍉", category: "Arcade", age: "4+", desc: "Slice fruit!" },
-  { id: "drop-stack", title: "Drop Stack", emoji: "📦", category: "Arcade", age: "5+", desc: "Stack blocks!" },
-  { id: "balloon-keepy-up", title: "Keepy Up", emoji: "🎈", category: "Arcade", age: "4+", desc: "Keep balloons up!" },
-  { id: "reaction-time", title: "Reaction Time", emoji: "⚡", category: "Arcade", age: "5+", desc: "Test speed!" },
-  { id: "build-a-tower", title: "Build Tower", emoji: "🏗️", category: "Arcade", age: "5+", desc: "Stack high!" },
-  { id: "potato-sack-race", title: "Sack Race", emoji: "🏃", category: "Arcade", age: "4+", desc: "Race to win!" },
-  { id: "lava-jump", title: "Lava Jump", emoji: "🌋", category: "Arcade", age: "5+", desc: "Jump over lava!" },
-  { id: "button-mash", title: "Button Mash", emoji: "🔴", category: "Arcade", age: "4+", desc: "Tap fast!" },
-  { id: "cup-stack", title: "Cup Stack", emoji: "🥤", category: "Arcade", age: "4+", desc: "Stack cups!" },
-  { id: "coin-collector", title: "Coin Collector", emoji: "🪙", category: "Arcade", age: "4+", desc: "Collect coins!" },
+  { id: "bubble-pop-chain", title: "Bubble Pop", emoji: "🫧", category: "Arcade", age: "4+", desc: "Pop bubbles!", device: "mobile" },
+  { id: "dino-jump", title: "Dino Jump", emoji: "🦖", category: "Arcade", age: "4+", desc: "Jump obstacles!", device: "mobile" },
+  { id: "whack-a-mole", title: "Whack-a-Mole", emoji: "🔨", category: "Arcade", age: "3+", desc: "Tap the moles!", device: "mobile" },
+  { id: "catch-the-rain", title: "Catch Rain", emoji: "🌧️", category: "Arcade", age: "4+", desc: "Catch raindrops!", device: "mobile" },
+  { id: "fishing-frenzy", title: "Fishing Frenzy", emoji: "🎣", category: "Arcade", age: "4+", desc: "Catch fish!", device: "mobile" },
+  { id: "shape-sorter", title: "Shape Sorter", emoji: "🔷", category: "Arcade", age: "3+", desc: "Sort shapes!", device: "mobile" },
+  { id: "balloon-pop", title: "Balloon Pop", emoji: "🎈", category: "Arcade", age: "3+", desc: "Pop balloons!", device: "mobile" },
+  { id: "fruit-slice", title: "Fruit Slice", emoji: "🍉", category: "Arcade", age: "4+", desc: "Slice fruit!", device: "mobile" },
+  { id: "drop-stack", title: "Drop Stack", emoji: "📦", category: "Arcade", age: "5+", desc: "Stack blocks!", device: "mobile" },
+  { id: "balloon-keepy-up", title: "Keepy Up", emoji: "🎈", category: "Arcade", age: "4+", desc: "Keep balloons up!", device: "mobile" },
+  { id: "reaction-time", title: "Reaction Time", emoji: "⚡", category: "Arcade", age: "5+", desc: "Test speed!", device: "mobile" },
+  { id: "build-a-tower", title: "Build Tower", emoji: "🏗️", category: "Arcade", age: "5+", desc: "Stack high!", device: "mobile" },
+  { id: "potato-sack-race", title: "Sack Race", emoji: "🏃", category: "Arcade", age: "4+", desc: "Race to win!", device: "mobile" },
+  { id: "lava-jump", title: "Lava Jump", emoji: "🌋", category: "Arcade", age: "5+", desc: "Jump over lava!", device: "mobile" },
+  { id: "button-mash", title: "Button Mash", emoji: "🔴", category: "Arcade", age: "4+", desc: "Tap fast!", device: "mobile" },
+  { id: "cup-stack", title: "Cup Stack", emoji: "🥤", category: "Arcade", age: "4+", desc: "Stack cups!", device: "mobile" },
+  { id: "coin-collector", title: "Coin Collector", emoji: "🪙", category: "Arcade", age: "4+", desc: "Collect coins!", device: "mobile" },
 
   // Creative
-  { id: "splat-paint", title: "Splat Paint", emoji: "🎨", category: "Creative", age: "3+", desc: "Paint splatter!" },
-  { id: "mirror-draw", title: "Mirror Draw", emoji: "🪞", category: "Creative", age: "4+", desc: "Symmetrical art!" },
-  { id: "color-mix-lab", title: "Color Mix", emoji: "🧪", category: "Creative", age: "4+", desc: "Mix colors!" },
-  { id: "coloring-book", title: "Coloring Book", emoji: "📖", category: "Creative", age: "3+", desc: "Color pictures!" },
-  { id: "sticker-scene", title: "Sticker Scene", emoji: "🌟", category: "Creative", age: "3+", desc: "Sticker art!" },
-  { id: "bubble-wand", title: "Bubble Wand", emoji: "🫧", category: "Creative", age: "3+", desc: "Bubble art!" },
-  { id: "face-maker", title: "Face Maker", emoji: "😊", category: "Creative", age: "3+", desc: "Make faces!" },
-  { id: "color-sort", title: "Color Sort", emoji: "🌈", category: "Creative", age: "3+", desc: "Sort colors!" },
+  { id: "splat-paint", title: "Splat Paint", emoji: "🎨", category: "Creative", age: "3+", desc: "Paint splatter!", device: "mobile" },
+  { id: "mirror-draw", title: "Mirror Draw", emoji: "🪞", category: "Creative", age: "4+", desc: "Symmetrical art!", device: "desktop" },
+  { id: "color-mix-lab", title: "Color Mix", emoji: "🧪", category: "Creative", age: "4+", desc: "Mix colors!", device: "mobile" },
+  { id: "coloring-book", title: "Coloring Book", emoji: "📖", category: "Creative", age: "3+", desc: "Color pictures!", device: "mobile" },
+  { id: "sticker-scene", title: "Sticker Scene", emoji: "🌟", category: "Creative", age: "3+", desc: "Sticker art!", device: "mobile" },
+  { id: "bubble-wand", title: "Bubble Wand", emoji: "🫧", category: "Creative", age: "3+", desc: "Bubble art!", device: "mobile" },
+  { id: "face-maker", title: "Face Maker", emoji: "😊", category: "Creative", age: "3+", desc: "Make faces!", device: "mobile" },
+  { id: "color-sort", title: "Color Sort", emoji: "🌈", category: "Creative", age: "3+", desc: "Sort colors!", device: "mobile" },
 
   // Educational
-  { id: "pokemon-kana-speller", title: "Pokémon Kana", emoji: "⚡", category: "Educational", age: "6+", desc: "Learn Japanese!" },
-  { id: "number-bubbles", title: "Number Bubbles", emoji: "🔢", category: "Educational", age: "3+", desc: "Pop numbers!" },
-  { id: "piano-keys", title: "Piano Keys", emoji: "🎹", category: "Educational", age: "4+", desc: "Play piano!" },
-  { id: "constellation-connect", title: "Constellations", emoji: "⭐", category: "Educational", age: "5+", desc: "Connect stars!" },
-  { id: "letter-pop", title: "Letter Pop", emoji: "🔤", category: "Educational", age: "4+", desc: "Pop letters!" },
-  { id: "pattern-builder", title: "Pattern Builder", emoji: "🔷", category: "Educational", age: "4+", desc: "Build patterns!" },
-  { id: "clock-learn", title: "Clock Learn", emoji: "🕐", category: "Educational", age: "5+", desc: "Tell time!" },
-  { id: "clock-time", title: "Clock Time", emoji: "⏰", category: "Educational", age: "5+", desc: "Set the clock!" },
-  { id: "money-match", title: "Money Match", emoji: "💰", category: "Educational", age: "5+", desc: "Count coins!" },
-  { id: "food-groups", title: "Food Groups", emoji: "🥗", category: "Educational", age: "4+", desc: "Sort foods!" },
-  { id: "animal-sounds", title: "Animal Sounds", emoji: "🐄", category: "Educational", age: "3+", desc: "Match sounds!" },
-  { id: "rhyme-time", title: "Rhyme Time", emoji: "🎤", category: "Educational", age: "4+", desc: "Match rhymes!" },
-  { id: "opposites", title: "Opposites", emoji: "↔️", category: "Educational", age: "4+", desc: "Match opposites!" },
-  { id: "alphabet-train", title: "ABC Train", emoji: "🚂", category: "Educational", age: "4+", desc: "Letter order!" },
-  { id: "alphabet-trace", title: "ABC Trace", emoji: "✏️", category: "Educational", age: "3+", desc: "Trace letters!" },
-  { id: "counting-sheep", title: "Count Sheep", emoji: "🐑", category: "Educational", age: "3+", desc: "Count sheep!" },
-  { id: "balloon-pop-math", title: "Balloon Math", emoji: "🧮", category: "Educational", age: "5+", desc: "Pop answers!" },
-  { id: "dice-roll", title: "Dice Roll", emoji: "🎲", category: "Educational", age: "4+", desc: "Roll dice!" },
-  { id: "bead-pattern", title: "Bead Pattern", emoji: "📿", category: "Educational", age: "4+", desc: "Bead patterns!" },
-  { id: "feed-the-monster", title: "Feed Monster", emoji: "👹", category: "Educational", age: "3+", desc: "Feed the monster!" },
+  { id: "pokemon-kana-speller", title: "Pokemon Kana", emoji: "⚡", category: "Educational", age: "6+", desc: "Learn Japanese!", device: "mobile" },
+  { id: "number-bubbles", title: "Number Bubbles", emoji: "🔢", category: "Educational", age: "3+", desc: "Pop numbers!", device: "mobile" },
+  { id: "piano-keys", title: "Piano Keys", emoji: "🎹", category: "Educational", age: "4+", desc: "Play piano!", device: "mobile" },
+  { id: "constellation-connect", title: "Constellations", emoji: "⭐", category: "Educational", age: "5+", desc: "Connect stars!", device: "both" },
+  { id: "letter-pop", title: "Letter Pop", emoji: "🔤", category: "Educational", age: "4+", desc: "Pop letters!", device: "mobile" },
+  { id: "pattern-builder", title: "Pattern Builder", emoji: "🔷", category: "Educational", age: "4+", desc: "Build patterns!", device: "mobile" },
+  { id: "clock-learn", title: "Clock Learn", emoji: "🕐", category: "Educational", age: "5+", desc: "Tell time!", device: "mobile" },
+  { id: "clock-time", title: "Clock Time", emoji: "⏰", category: "Educational", age: "5+", desc: "Set the clock!", device: "mobile" },
+  { id: "money-match", title: "Money Match", emoji: "💰", category: "Educational", age: "5+", desc: "Count coins!", device: "mobile" },
+  { id: "food-groups", title: "Food Groups", emoji: "🥗", category: "Educational", age: "4+", desc: "Sort foods!", device: "mobile" },
+  { id: "animal-sounds", title: "Animal Sounds", emoji: "🐄", category: "Educational", age: "3+", desc: "Match sounds!", device: "mobile" },
+  { id: "rhyme-time", title: "Rhyme Time", emoji: "🎤", category: "Educational", age: "4+", desc: "Match rhymes!", device: "mobile" },
+  { id: "opposites", title: "Opposites", emoji: "↔️", category: "Educational", age: "4+", desc: "Match opposites!", device: "mobile" },
+  { id: "alphabet-train", title: "ABC Train", emoji: "🚂", category: "Educational", age: "4+", desc: "Letter order!", device: "mobile" },
+  { id: "alphabet-trace", title: "ABC Trace", emoji: "✏️", category: "Educational", age: "3+", desc: "Trace letters!", device: "mobile" },
+  { id: "counting-sheep", title: "Count Sheep", emoji: "🐑", category: "Educational", age: "3+", desc: "Count sheep!", device: "mobile" },
+  { id: "balloon-pop-math", title: "Balloon Math", emoji: "🧮", category: "Educational", age: "5+", desc: "Pop answers!", device: "mobile" },
+  { id: "dice-roll", title: "Dice Roll", emoji: "🎲", category: "Educational", age: "4+", desc: "Roll dice!", device: "mobile" },
+  { id: "bead-pattern", title: "Bead Pattern", emoji: "📿", category: "Educational", age: "4+", desc: "Bead patterns!", device: "mobile" },
+  { id: "feed-the-monster", title: "Feed Monster", emoji: "👹", category: "Educational", age: "3+", desc: "Feed the monster!", device: "mobile" },
 
   // Adventure
-  { id: "rocket-launch", title: "Rocket Launch", emoji: "🚀", category: "Adventure", age: "5+", desc: "Space adventure!" },
-  { id: "snowball-fight", title: "Snowball Fight", emoji: "❄️", category: "Adventure", age: "4+", desc: "Throw snowballs!" },
-  { id: "train-tracks", title: "Train Tracks", emoji: "🚂", category: "Adventure", age: "4+", desc: "Lay track!" },
-  { id: "train-track", title: "Train Track", emoji: "🛤️", category: "Adventure", age: "4+", desc: "Build tracks!" },
-  { id: "treasure-hunt", title: "Treasure Hunt", emoji: "🏴‍☠️", category: "Adventure", age: "4+", desc: "Find treasure!" },
-  { id: "cloud-jump", title: "Cloud Jump", emoji: "☁️", category: "Adventure", age: "4+", desc: "Jump clouds!" },
-  { id: "treasure-map", title: "Treasure Map", emoji: "🗺️", category: "Adventure", age: "4+", desc: "Follow map!" },
-  { id: "zoo-escape", title: "Zoo Escape", emoji: "🦁", category: "Adventure", age: "4+", desc: "Help animals!" },
-  { id: "time-travel", title: "Time Travel", emoji: "⏳", category: "Adventure", age: "5+", desc: "Travel time!" },
+  { id: "rocket-launch", title: "Rocket Launch", emoji: "🚀", category: "Adventure", age: "5+", desc: "Space adventure!", device: "mobile" },
+  { id: "snowball-fight", title: "Snowball Fight", emoji: "❄️", category: "Adventure", age: "4+", desc: "Throw snowballs!", device: "mobile" },
+  { id: "train-tracks", title: "Train Tracks", emoji: "🚂", category: "Adventure", age: "4+", desc: "Lay track!", device: "both" },
+  { id: "train-track", title: "Train Track", emoji: "🛤️", category: "Adventure", age: "4+", desc: "Build tracks!", device: "both" },
+  { id: "treasure-hunt", title: "Treasure Hunt", emoji: "🏴‍☠️", category: "Adventure", age: "4+", desc: "Find treasure!", device: "mobile" },
+  { id: "cloud-jump", title: "Cloud Jump", emoji: "☁️", category: "Adventure", age: "4+", desc: "Jump clouds!", device: "mobile" },
+  { id: "treasure-map", title: "Treasure Map", emoji: "🗺️", category: "Adventure", age: "4+", desc: "Follow map!", device: "mobile" },
+  { id: "zoo-escape", title: "Zoo Escape", emoji: "🦁", category: "Adventure", age: "4+", desc: "Help animals!", device: "mobile" },
+  { id: "time-travel", title: "Time Travel", emoji: "⏳", category: "Adventure", age: "5+", desc: "Travel time!", device: "mobile" },
 
   // Nature
-  { id: "bug-garden", title: "Bug Garden", emoji: "🦋", category: "Nature", age: "4+", desc: "Catch bugs!" },
-  { id: "egg-catch", title: "Egg Catch", emoji: "🥚", category: "Nature", age: "4+", desc: "Catch eggs!" },
-  { id: "petal-catch", title: "Petal Catch", emoji: "🌸", category: "Nature", age: "4+", desc: "Catch petals!" },
-  { id: "garden-grow", title: "Garden Grow", emoji: "🌻", category: "Nature", age: "4+", desc: "Grow plants!" },
-  { id: "catch-fireflies", title: "Fireflies", emoji: "✨", category: "Nature", age: "4+", desc: "Catch fireflies!" },
-  { id: "zoo-keeper", title: "Zoo Keeper", emoji: "🦁", category: "Nature", age: "4+", desc: "Match habitats!" },
-  { id: "flower-bloom", title: "Flower Bloom", emoji: "🌺", category: "Nature", age: "4+", desc: "Bloom flowers!" },
-  { id: "plant-seeds", title: "Plant Seeds", emoji: "🌱", category: "Nature", age: "4+", desc: "Plant seeds!" },
-  { id: "food-chain", title: "Food Chain", emoji: "🔗", category: "Nature", age: "5+", desc: "Food chains!" },
+  { id: "bug-garden", title: "Bug Garden", emoji: "🦋", category: "Nature", age: "4+", desc: "Catch bugs!", device: "mobile" },
+  { id: "egg-catch", title: "Egg Catch", emoji: "🥚", category: "Nature", age: "4+", desc: "Catch eggs!", device: "mobile" },
+  { id: "petal-catch", title: "Petal Catch", emoji: "🌸", category: "Nature", age: "4+", desc: "Catch petals!", device: "mobile" },
+  { id: "garden-grow", title: "Garden Grow", emoji: "🌻", category: "Nature", age: "4+", desc: "Grow plants!", device: "mobile" },
+  { id: "catch-fireflies", title: "Fireflies", emoji: "✨", category: "Nature", age: "4+", desc: "Catch fireflies!", device: "mobile" },
+  { id: "zoo-keeper", title: "Zoo Keeper", emoji: "🦁", category: "Nature", age: "4+", desc: "Match habitats!", device: "mobile" },
+  { id: "flower-bloom", title: "Flower Bloom", emoji: "🌺", category: "Nature", age: "4+", desc: "Bloom flowers!", device: "mobile" },
+  { id: "plant-seeds", title: "Plant Seeds", emoji: "🌱", category: "Nature", age: "4+", desc: "Plant seeds!", device: "mobile" },
+  { id: "food-chain", title: "Food Chain", emoji: "🔗", category: "Nature", age: "5+", desc: "Food chains!", device: "mobile" },
 
-  // Physics
-  { id: "gravity-draw", title: "Gravity Draw", emoji: "⚽", category: "Physics", age: "5+", desc: "Draw platforms!" },
-  { id: "rhythm-tiles", title: "Rhythm Tiles", emoji: "🎵", category: "Physics", age: "5+", desc: "Tap to beat!" },
-  { id: "bounce-ball", title: "Bounce Ball", emoji: "🏀", category: "Physics", age: "4+", desc: "Keep bouncing!" },
-  { id: "pinball-wizard", title: "Pinball", emoji: "🎱", category: "Physics", age: "5+", desc: "Play pinball!" },
-  { id: "hopscotch", title: "Hopscotch", emoji: "🦶", category: "Physics", age: "4+", desc: "Jump squares!" },
-  { id: "juice-squeeze", title: "Juice Squeeze", emoji: "🧃", category: "Physics", age: "4+", desc: "Squeeze juice!" },
+  // Physics - these often need mouse/precision
+  { id: "gravity-draw", title: "Gravity Draw", emoji: "⚽", category: "Physics", age: "5+", desc: "Draw platforms!", device: "desktop" },
+  { id: "rhythm-tiles", title: "Rhythm Tiles", emoji: "🎵", category: "Physics", age: "5+", desc: "Tap to beat!", device: "mobile" },
+  { id: "bounce-ball", title: "Bounce Ball", emoji: "🏀", category: "Physics", age: "4+", desc: "Keep bouncing!", device: "desktop" },
+  { id: "pinball-wizard", title: "Pinball", emoji: "🎱", category: "Physics", age: "5+", desc: "Play pinball!", device: "desktop" },
+  { id: "hopscotch", title: "Hopscotch", emoji: "🦶", category: "Physics", age: "4+", desc: "Jump squares!", device: "mobile" },
+  { id: "juice-squeeze", title: "Juice Squeeze", emoji: "🧃", category: "Physics", age: "4+", desc: "Squeeze juice!", device: "mobile" },
 
   // Simulation
-  { id: "weather-dress", title: "Weather Dress", emoji: "🌤️", category: "Simulation", age: "4+", desc: "Dress up!" },
-  { id: "music-maker", title: "Music Maker", emoji: "🎵", category: "Simulation", age: "4+", desc: "Make music!" },
-  { id: "traffic-light", title: "Traffic Light", emoji: "🚦", category: "Simulation", age: "4+", desc: "Stop and go!" },
-  { id: "pet-vet", title: "Pet Vet", emoji: "🐕", category: "Simulation", age: "4+", desc: "Care for pets!" },
-  { id: "karaoke-kids", title: "Karaoke", emoji: "🎤", category: "Simulation", age: "4+", desc: "Sing along!" },
-  { id: "symphony-conductor", title: "Symphony", emoji: "🎼", category: "Simulation", age: "5+", desc: "Conduct music!" },
-  { id: "drum-beat", title: "Drum Beat", emoji: "🥁", category: "Simulation", age: "4+", desc: "Play drums!" },
+  { id: "weather-dress", title: "Weather Dress", emoji: "🌤️", category: "Simulation", age: "4+", desc: "Dress up!", device: "mobile" },
+  { id: "music-maker", title: "Music Maker", emoji: "🎵", category: "Simulation", age: "4+", desc: "Make music!", device: "mobile" },
+  { id: "traffic-light", title: "Traffic Light", emoji: "🚦", category: "Simulation", age: "4+", desc: "Stop and go!", device: "mobile" },
+  { id: "pet-vet", title: "Pet Vet", emoji: "🐕", category: "Simulation", age: "4+", desc: "Care for pets!", device: "mobile" },
+  { id: "karaoke-kids", title: "Karaoke", emoji: "🎤", category: "Simulation", age: "4+", desc: "Sing along!", device: "mobile" },
+  { id: "symphony-conductor", title: "Symphony", emoji: "🎼", category: "Simulation", age: "5+", desc: "Conduct music!", device: "mobile" },
+  { id: "drum-beat", title: "Drum Beat", emoji: "🥁", category: "Simulation", age: "4+", desc: "Play drums!", device: "mobile" },
 
   // Matching
-  { id: "sound-match", title: "Sound Match", emoji: "🔊", category: "Matching", age: "4+", desc: "Match sounds!" },
-  { id: "spin-and-match", title: "Spin Match", emoji: "🎰", category: "Matching", age: "4+", desc: "Spin to match!" },
-  { id: "pop-the-lock", title: "Pop the Lock", emoji: "🔓", category: "Matching", age: "5+", desc: "Timing game!" },
-  { id: "ant-trail", title: "Ant Trail", emoji: "🐜", category: "Matching", age: "4+", desc: "Guide ants!" },
-  { id: "bubble-bath", title: "Bubble Bath", emoji: "🛁", category: "Matching", age: "3+", desc: "Bath bubbles!" },
+  { id: "sound-match", title: "Sound Match", emoji: "🔊", category: "Matching", age: "4+", desc: "Match sounds!", device: "mobile" },
+  { id: "spin-and-match", title: "Spin Match", emoji: "🎰", category: "Matching", age: "4+", desc: "Spin to match!", device: "mobile" },
+  { id: "pop-the-lock", title: "Pop the Lock", emoji: "🔓", category: "Matching", age: "5+", desc: "Timing game!", device: "mobile" },
+  { id: "ant-trail", title: "Ant Trail", emoji: "🐜", category: "Matching", age: "4+", desc: "Guide ants!", device: "mobile" },
+  { id: "bubble-bath", title: "Bubble Bath", emoji: "🛁", category: "Matching", age: "3+", desc: "Bath bubbles!", device: "mobile" },
 
   // Skill
-  { id: "race-the-timer", title: "Race Timer", emoji: "⏱️", category: "Skill", age: "5+", desc: "Beat clock!" },
-  { id: "gear-spin", title: "Gear Spin", emoji: "⚙️", category: "Skill", age: "5+", desc: "Connect gears!" },
-  { id: "shadow-puppets", title: "Shadow Puppets", emoji: "🕊️", category: "Skill", age: "4+", desc: "Hand shadows!" },
-  { id: "piano-tiles-drop", title: "Piano Tiles", emoji: "🎹", category: "Skill", age: "5+", desc: "Catch tiles!" },
+  { id: "race-the-timer", title: "Race Timer", emoji: "⏱️", category: "Skill", age: "5+", desc: "Beat clock!", device: "mobile" },
+  { id: "gear-spin", title: "Gear Spin", emoji: "⚙️", category: "Skill", age: "5+", desc: "Connect gears!", device: "both" },
+  { id: "shadow-puppets", title: "Shadow Puppets", emoji: "🕊️", category: "Skill", age: "4+", desc: "Hand shadows!", device: "mobile" },
+  { id: "piano-tiles-drop", title: "Piano Tiles", emoji: "🎹", category: "Skill", age: "5+", desc: "Catch tiles!", device: "mobile" },
 ];
 
 const CATEGORIES = ["All", "Puzzle", "Arcade", "Creative", "Educational", "Adventure", "Nature", "Physics", "Simulation", "Matching", "Skill"];
 
+const DEVICE_ICONS: Record<string, { icon: string; label: string; color: string }> = {
+  mobile: { icon: "📱", label: "Mobile", color: "bg-green-100 text-green-700" },
+  desktop: { icon: "💻", label: "Desktop", color: "bg-blue-100 text-blue-700" },
+  both: { icon: "📱💻", label: "Both", color: "bg-purple-100 text-purple-700" },
+};
+
 export default function Home() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [deviceFilter, setDeviceFilter] = useState<"all" | "mobile" | "desktop" | "both">("all");
 
   const filtered = useMemo(() => {
     return ALL_GAMES.filter(g => {
       const matchSearch = g.title.toLowerCase().includes(search.toLowerCase()) ||
                           g.desc.toLowerCase().includes(search.toLowerCase());
       const matchCat = category === "All" || g.category === category;
-      return matchSearch && matchCat;
+      const matchDevice = deviceFilter === "all" || g.device === deviceFilter;
+      return matchSearch && matchCat && matchDevice;
     });
-  }, [search, category]);
+  }, [search, category, deviceFilter]);
 
   const catCounts = useMemo(() => {
     const counts: Record<string, number> = { All: ALL_GAMES.length };
@@ -177,7 +196,7 @@ export default function Home() {
           </div>
 
           {/* Category Pills */}
-          <div className="flex flex-wrap gap-1.5 justify-center">
+          <div className="flex flex-wrap gap-1.5 justify-center mb-2">
             {CATEGORIES.map(cat => (
               <button
                 key={cat}
@@ -192,6 +211,50 @@ export default function Home() {
               </button>
             ))}
           </div>
+
+          {/* Device Filter */}
+          <div className="flex justify-center gap-2">
+            <button
+              onClick={() => setDeviceFilter("all")}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                deviceFilter === "all"
+                  ? "bg-gray-700 text-white"
+                  : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-300"
+              }`}
+            >
+              All Devices
+            </button>
+            <button
+              onClick={() => setDeviceFilter("mobile")}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                deviceFilter === "mobile"
+                  ? "bg-green-500 text-white"
+                  : "bg-white text-gray-600 hover:bg-green-50 border border-green-300"
+              }`}
+            >
+              📱 Mobile
+            </button>
+            <button
+              onClick={() => setDeviceFilter("desktop")}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                deviceFilter === "desktop"
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-gray-600 hover:bg-blue-50 border border-blue-300"
+              }`}
+            >
+              💻 Desktop
+            </button>
+            <button
+              onClick={() => setDeviceFilter("both")}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
+                deviceFilter === "both"
+                  ? "bg-purple-500 text-white"
+                  : "bg-white text-gray-600 hover:bg-purple-50 border border-purple-300"
+              }`}
+            >
+              📱💻 Both
+            </button>
+          </div>
         </div>
       </header>
 
@@ -201,6 +264,7 @@ export default function Home() {
           Showing {filtered.length} game{filtered.length !== 1 ? "s" : ""}
           {search && ` matching "${search}"`}
           {category !== "All" && ` in ${category}`}
+          {deviceFilter !== "all" && ` for ${DEVICE_ICONS[deviceFilter].label}`}
         </p>
       </div>
 
@@ -213,7 +277,12 @@ export default function Home() {
               href={`/games/${game.id}`}
               className="group"
             >
-              <div className="bg-white rounded-xl p-2.5 shadow hover:shadow-lg transition-all hover:scale-105 border-2 border-transparent hover:border-purple-400 h-full flex flex-col items-center text-center">
+              <div className="bg-white rounded-xl p-2.5 shadow hover:shadow-lg transition-all hover:scale-105 border-2 border-transparent hover:border-purple-400 h-full flex flex-col items-center text-center relative">
+                {/* Device indicator - bottom right corner */}
+                <div className={`absolute -bottom-1 -right-1 text-[9px] px-1 py-0.5 rounded-full font-bold ${DEVICE_ICONS[game.device].color}`}>
+                  {DEVICE_ICONS[game.device].icon}
+                </div>
+                
                 <span className="text-3xl group-hover:scale-110 transition-transform">
                   {game.emoji}
                 </span>
@@ -237,9 +306,9 @@ export default function Home() {
           <div className="text-center py-16">
             <div className="text-5xl mb-3">🔍</div>
             <h2 className="text-xl font-bold text-gray-600">No games found</h2>
-            <p className="text-gray-500 mt-1">Try a different search term</p>
+            <p className="text-gray-500 mt-1">Try a different search or filter</p>
             <button
-              onClick={() => { setSearch(""); setCategory("All"); }}
+              onClick={() => { setSearch(""); setCategory("All"); setDeviceFilter("all"); }}
               className="mt-4 px-4 py-2 bg-purple-500 text-white rounded-lg font-bold"
             >
               Show All Games
@@ -251,6 +320,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="text-center py-4 text-gray-500 text-sm">
         <p>🌟 {ALL_GAMES.length} fun games for kids! 🌟</p>
+        <p className="text-xs mt-1">📱 = Mobile friendly | 💻 = Desktop | 📱💻 = Both</p>
       </footer>
     </main>
   );
