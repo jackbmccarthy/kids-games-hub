@@ -258,7 +258,12 @@ export default function BuildASnowman() {
   };
   
   return (
-    <main className="relative w-screen h-screen overflow-hidden">
+    <main className="fixed inset-0 overflow-hidden overscroll-none">
+      {/* Prevent body scroll on mobile */}
+      <style jsx global>{`
+        body { overflow: hidden; overscroll-behavior: none; }
+      `}</style>
+      
       <canvas
         ref={canvasRef}
         onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
@@ -273,7 +278,8 @@ export default function BuildASnowman() {
           handleMove(e.touches[0].clientX, e.touches[0].clientY);
         }}
         onTouchEnd={handleEnd}
-        className="absolute inset-0 cursor-pointer"
+        className="absolute inset-0 cursor-grab active:cursor-grabbing"
+        style={{ touchAction: 'none' }}
       />
       
       {/* Menu */}

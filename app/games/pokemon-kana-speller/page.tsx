@@ -399,13 +399,14 @@ function DrawingCanvas({
           width={280}
           height={280}
           className="relative z-10 touch-none cursor-crosshair"
+          style={{ touchAction: 'none' }}
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}
           onMouseLeave={stopDrawing}
-          onTouchStart={startDrawing}
-          onTouchMove={draw}
-          onTouchEnd={stopDrawing}
+          onTouchStart={(e) => { e.preventDefault(); startDrawing(e); }}
+          onTouchMove={(e) => { e.preventDefault(); draw(e); }}
+          onTouchEnd={(e) => { e.preventDefault(); stopDrawing(); }}
         />
       </div>
 
@@ -620,7 +621,7 @@ export default function PokemonKanaSpellerPage() {
   }, [mode, selectedKana, kanaPool, generation, allPokemon, completed, currentPokemon]);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-red-500 via-yellow-400 to-red-500 p-4">
+    <main className="min-h-screen bg-gradient-to-br from-red-500 via-yellow-400 to-red-500 p-4 overflow-hidden overscroll-none">
       <Sparkles active={sparklePos.active} x={sparklePos.x} y={sparklePos.y} />
       {Object.entries(slotSparkles).map(([idx, pos]) => (
         <Sparkles key={idx} active={pos.active} x={pos.x} y={pos.y} />

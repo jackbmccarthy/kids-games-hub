@@ -183,7 +183,12 @@ export default function ShapeSorterPage() {
   }
 
   return (
-    <main ref={containerRef} className="min-h-screen bg-gradient-to-b from-purple-200 to-pink-200 relative overflow-hidden">
+    <main ref={containerRef} className="fixed inset-0 bg-gradient-to-b from-purple-200 to-pink-200 overflow-hidden overscroll-none">
+      {/* Prevent body scroll on mobile */}
+      <style jsx global>{`
+        body { overflow: hidden; overscroll-behavior: none; }
+      `}</style>
+      
       {/* Holes at bottom */}
       {Object.entries(holePositions).map(([type, pos]) => (
         <div

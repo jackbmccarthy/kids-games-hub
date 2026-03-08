@@ -354,7 +354,7 @@ export default function ColorSortPage() {
   return (
     <main
       ref={containerRef}
-      className="min-h-screen relative overflow-hidden touch-none"
+      className="fixed inset-0 overflow-hidden overscroll-none touch-none"
       style={{
         background: `
           linear-gradient(180deg, 
@@ -368,6 +368,11 @@ export default function ColorSortPage() {
         `,
       }}
     >
+      {/* Prevent body scroll on mobile */}
+      <style jsx global>{`
+        body { overflow: hidden; overscroll-behavior: none; }
+      `}</style>
+      
       {/* Warehouse background elements */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Wooden floor lines */}

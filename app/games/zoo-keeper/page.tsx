@@ -344,8 +344,13 @@ export default function ZooKeeperPage() {
   return (
     <main
       ref={containerRef}
-      className="min-h-screen bg-gradient-to-b from-sky-300 via-sky-200 to-green-200 relative overflow-hidden touch-none select-none"
+      className="fixed inset-0 bg-gradient-to-b from-sky-300 via-sky-200 to-green-200 overflow-hidden overscroll-none touch-none select-none"
     >
+      {/* Prevent body scroll on mobile */}
+      <style jsx global>{`
+        body { overflow: hidden; overscroll-behavior: none; }
+      `}</style>
+      
       {/* Clouds decoration */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-10 left-10 text-6xl opacity-60 animate-pulse">☁️</div>

@@ -92,7 +92,12 @@ export default function ConnectTheDotsAnimals() {
   };
   
   return (
-    <main className="relative w-screen h-screen overflow-hidden">
+    <main className="fixed inset-0 overflow-hidden overscroll-none">
+      {/* Prevent body scroll on mobile */}
+      <style jsx global>{`
+        body { overflow: hidden; overscroll-behavior: none; }
+      `}</style>
+      
       <canvas
         ref={canvasRef}
         onClick={(e) => handleTap(e.clientX, e.clientY)}
@@ -101,7 +106,7 @@ export default function ConnectTheDotsAnimals() {
           handleTap(e.touches[0].clientX, e.touches[0].clientY);
         }}
         className="absolute inset-0 cursor-pointer"
-        style={{ background: 'linear-gradient(180deg, #87CEEB 0%, #F4A460 100%)' }}
+        style={{ background: 'linear-gradient(180deg, #87CEEB 0%, #F4A460 100%)', touchAction: 'none' }}
       />
       
       {gamePhase === 'connecting' && (
